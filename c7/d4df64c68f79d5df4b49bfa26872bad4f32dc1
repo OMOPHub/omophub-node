@@ -1,0 +1,157 @@
+src/common/utils/to-snake-case.ts
+  s_b724aff89835a7::t_4d72a2ba226a2e 1-3,12-13,18-37
+  s_b724aff89835a7::t_acdaf34eaac4ff 4-11,14-17
+.github/workflows/ci.yml
+  s_b724aff89835a7::t_40a246a41d3795 1-13,15-27
+  s_b724aff89835a7::t_723e1ac42990d1 14
+src/common/interfaces/require-at-least-one.ts
+  s_b724aff89835a7::t_30134684ae4610 1-10
+src/vocabularies/interfaces/list-vocabularies-options.ts
+  s_b724aff89835a7::t_ac21dd310a172a 1-8
+src/common/interfaces/post-options.ts
+  s_b724aff89835a7::t_329be346d90146 1-8
+CHANGELOG.md
+  s_b724aff89835a7::t_9fe4dac531dfc6 35-36
+  s_b724aff89835a7::t_71120541bc2ab6 1-14,28
+  s_b724aff89835a7::t_385fa8ac89dc36 15-27
+  s_b724aff89835a7::t_18c5b24d9a3f06 29-34
+test/common/utils/to-snake-case.test.ts
+  s_b724aff89835a7::t_829a5a2ef2aac3 1-18,31-59
+  s_b724aff89835a7::t_4161c4fab48cfc 19-30
+src/index.ts
+  s_b724aff89835a7::t_2dc31df8b35713 1
+  s_b724aff89835a7::t_60c4de1f70ea10 2-34
+test/common/utils/parse-error.test.ts
+  s_b724aff89835a7::t_58e0f40e317c01 1-10,12-127
+test/client-http.test.ts
+  s_b724aff89835a7::t_0df845d423e16b 1-173,215-262,266-280,284-317
+  s_b724aff89835a7::t_e9a16fab6704d6 263-265,281-283
+  s_b724aff89835a7::t_bbfc2c9382c7da 174-214
+test/common/utils/build-query.test.ts
+  s_b724aff89835a7::t_0db2a7c6ff1cfc 1-20,22-52
+test/errors.test.ts
+  s_b724aff89835a7::t_67a33175d477d9 1-27
+test/common/utils/backoff.test.ts
+  s_b724aff89835a7::t_5e7be2e6d5ed3b 1-64
+.github/workflows/publish.yml
+  s_b724aff89835a7::t_422b31228e38fa 1-27
+test/version.test.ts
+  s_b724aff89835a7::t_3de41a1b1bc3e3 1-8
+test/common/utils/unwrap-envelope.test.ts
+  s_b724aff89835a7::t_926cc3607161ac 38-39,45-51
+  s_b724aff89835a7::t_748c2c196683a0 1-37,40-44,52-57
+tsconfig.json
+  s_b724aff89835a7::t_e041b7864fe2fb 1-23
+src/common/interfaces/get-options.ts
+  s_b724aff89835a7::t_40a9c36f5673bf 1-3
+src/common/interfaces/index.ts
+  s_b724aff89835a7::t_14b6cc3520be58 1-14
+test/vocabularies/vocabularies.test.ts
+  s_b724aff89835a7::t_c6c09a58a5a0f4 1-98
+package.json
+  s_b724aff89835a7::t_9a4aff09cc440f 1-3,5-13,17-65
+  s_b724aff89835a7::t_48c6f1b1479f12 14-16
+  h_70ae365dc0c3d1 4
+.nvmrc
+  s_b724aff89835a7::t_8cb422811a28c5 1
+src/common/utils/sleep.ts
+  s_b724aff89835a7::t_cccbb7f40a561f 1-21
+test/client.test.ts
+  s_b724aff89835a7::t_53fa7c8a72f989 3,21-26,32-34,41,43-52,54-60,86-88
+  s_b724aff89835a7::t_91fa8152d669c2 89-91
+  s_b724aff89835a7::t_a7f1cb2ad62bdf 1-2,4-20,27-31,35-40,42,53,61-85,92-93
+src/common/utils/backoff.ts
+  s_b724aff89835a7::t_d88f9f08d28360 4,15-17,26-28,34-39
+  s_b724aff89835a7::t_c857fa60d4a1b6 1-3,5-14,18-25,29-33,40-48
+src/common/interfaces/patch-options.ts
+  s_b724aff89835a7::t_d207d7411e6940 1-3
+test/fixtures/index.ts
+  s_b724aff89835a7::t_efa0fea4bf34e8 1-46
+src/common/interfaces/api-envelope.ts
+  s_b724aff89835a7::t_4e2d5de51db051 1-18
+src/common/interfaces/put-options.ts
+  s_b724aff89835a7::t_482c60e95ece1a 1-3
+src/common/utils/merge-headers.ts
+  s_b724aff89835a7::t_847629cd694a4a 1-2
+  s_b724aff89835a7::t_cd63061a4e652f 3-10,14-15
+  s_b724aff89835a7::t_50e0fb16e0e9d7 11-13
+src/common/interfaces/per-call-options.ts
+  s_b724aff89835a7::t_43e3fc16214f7e 2-3,12-23
+  s_b724aff89835a7::t_f0d791ebe59be1 4-7,9
+  s_b724aff89835a7::t_3912f33f247a50 8,10-11
+src/vocabularies/interfaces/vocabulary.ts
+  s_b724aff89835a7::t_d5b73efaf2305b 1-28
+src/errors.ts
+  s_b724aff89835a7::t_d52132ee7559ab 1-30
+src/common/utils/parse-error.ts
+  s_b724aff89835a7::t_3cba756bdff31e 1,3-61,64-131
+  s_b724aff89835a7::t_0ba2d07b6cdb9a 62-63
+  s_b724aff89835a7::t_aa3e9634e49239 2
+biome.json
+  s_b724aff89835a7::t_b8192579628daa 1-51
+src/interfaces.ts
+  s_b724aff89835a7::t_5faad93b2bdcbc 1-2,4,6-45,47-64
+  s_b724aff89835a7::t_5354f61d279789 3,5,46
+vitest.config.ts
+  s_b724aff89835a7::t_efb8ce39197f7c 1-14
+README.md
+  s_b724aff89835a7::t_a235b05ec19a99 1-42
+src/common/interfaces/delete-options.ts
+  s_b724aff89835a7::t_5bf59c75bffb13 1-3
+src/common/interfaces/vocab-release.ts
+  s_b724aff89835a7::t_d0e21c5e1b6c71 1-8
+renovate.json
+  s_b724aff89835a7::t_6d75e58f48c03b 1-4
+.gitignore
+  s_b724aff89835a7::t_5294233d8ad28f 1-13
+src/common/interfaces/require-exactly-one.ts
+  s_b724aff89835a7::t_f66d1bdebce9ec 1-15
+src/common/utils/env.ts
+  s_b724aff89835a7::t_eebbb1f6c65ad3 1-12
+src/client.ts
+  s_b724aff89835a7::t_ea930491760b7d 29-32
+  s_b724aff89835a7::t_4ad49422bebba8 60,73,81
+  s_b724aff89835a7::t_14793e61bdcfb8 4
+  s_b724aff89835a7::t_5733635d8a6438 1-3,5-15,49-51,61-62,64-65,67,69,74,79-80,82-134,136-175,181,185-199,201-236
+  s_b724aff89835a7::t_3d6a2e6c1b1479 16-28,33-48,52-59,63,66,68,70-72,75-78,135,237
+  s_b724aff89835a7::t_6c18d86d1c8407 176-180,182-184,200
+  s_b724aff89835a7::t_250fdf6d0b6ca8 238-250
+src/common/interfaces/pagination.ts
+  s_b724aff89835a7::t_fcd4177f1b4392 1-28
+src/common/utils/build-query.ts
+  s_b724aff89835a7::t_c6ff22df743516 1-33
+src/version.ts
+  s_b724aff89835a7::t_e7ec3b3407731f 1-5
+src/common/utils/unwrap-envelope.ts
+  s_b724aff89835a7::t_1f02c51a38f70a 1-11,16,20-24,26-46
+  s_b724aff89835a7::t_7b549d471b06f9 12-15,17-19,25
+src/common/utils/index.ts
+  s_b724aff89835a7::t_7872f0f0e1fcf8 1,3-6
+src/vocabularies/interfaces/index.ts
+  s_b724aff89835a7::t_3d4e99a0e19a92 1
+src/vocabularies/vocabularies.ts
+  s_b724aff89835a7::t_a4a46c5901bfc7 1-37
+test/helpers/mock-fetch.ts
+  s_b724aff89835a7::t_3858bd75479a18 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c7d4df64c68f79d5df4b49bfa26872bad4f32dc1",
+  "prompts": {},
+  "humans": {
+    "h_70ae365dc0c3d1": {
+      "author": "alex-omophub <sdk@omophub.com>"
+    }
+  },
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
