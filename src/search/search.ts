@@ -168,17 +168,41 @@ export class Search {
 
   /**
    * Semantic (embedding-based) search.
+   *
+   * Normalises the response so `data.results` is always a populated array,
+   * regardless of whether the server returned `{ results: [...] }`,
+   * `{ data: [...] }`, or a bare array — same defensive shape-handling
+   * the iter / all variants apply.
    */
   async semantic(
     query: string,
     options: SemanticSearchOptions & GetOptions = {},
   ): Promise<OMOPHubResponse<SemanticSearchResultSet>> {
     const { signal, headers, query: extraQuery, ...flags } = options;
-    return this.client.get<SemanticSearchResultSet>('/concepts/semantic-search', {
+    const response = await this.client.get<unknown>('/concepts/semantic-search', {
       signal,
       headers,
       query: { ...flags, ...extraQuery, query },
     });
+    if (response.error) {
+      return { data: null, error: response.error, meta: null, headers: response.headers };
+    }
+    const results = normaliseSemanticSearchData(response.data);
+    const raw =
+      response.data && typeof response.data === 'object' && !Array.isArray(response.data)
+        ? (response.data as Record<string, unknown>)
+        : {};
+    const normalised: SemanticSearchResultSet = { results };
+    if (raw.search_metadata && typeof raw.search_metadata === 'object') {
+      normalised.search_metadata =
+        raw.search_metadata as SemanticSearchResultSet['search_metadata'];
+    }
+    return {
+      data: normalised,
+      error: null,
+      meta: response.meta,
+      headers: response.headers,
+    };
   }
 
   /**
@@ -295,15 +319,20 @@ export class Search {
     options: SimilarSearchOptions,
     requestOptions: PostOptions = {},
   ): Promise<OMOPHubResponse<SimilarSearchResult>> {
-    const provided = [
-      options.conceptId !== undefined,
-      options.conceptName !== undefined,
-      options.query !== undefined,
-    ].filter(Boolean).length;
+    // Tight checks rather than `!== undefined`: a JS caller passing
+    // `null`, `''`, or `NaN` for one of the XOR fields should be treated
+    // as "not provided" and rejected synthetically, not forwarded to the
+    // API as a malformed POST.
+    const hasConceptId =
+      typeof options.conceptId === 'number' && Number.isFinite(options.conceptId);
+    const hasConceptName =
+      typeof options.conceptName === 'string' && options.conceptName.length > 0;
+    const hasQuery = typeof options.query === 'string' && options.query.length > 0;
+    const provided = [hasConceptId, hasConceptName, hasQuery].filter(Boolean).length;
     if (provided !== 1) {
       return syntheticError<SimilarSearchResult>(
         'missing_required_field',
-        'Provide exactly one of `conceptId`, `conceptName`, or `query`.',
+        'Provide exactly one of `conceptId`, `conceptName`, or `query` (non-empty).',
       );
     }
     const body = toSnakeCaseKeys(options);

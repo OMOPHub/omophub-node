@@ -110,6 +110,29 @@ describe('client.mappings.map', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  test('rejects empty sourceConcepts array synthetically', async () => {
+    const fetchMock = createMockFetch();
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { error } = await client.mappings.map({
+      targetVocabulary: 'SNOMED',
+      sourceConcepts: [],
+    });
+    expect(error?.name).toBe('missing_required_field');
+    expect(error?.message).toMatch(/at least one entry/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test('rejects empty sourceCodes array synthetically', async () => {
+    const fetchMock = createMockFetch();
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { error } = await client.mappings.map({
+      targetVocabulary: 'SNOMED',
+      sourceCodes: [],
+    });
+    expect(error?.name).toBe('missing_required_field');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   test('forwards idempotencyKey to the Idempotency-Key header', async () => {
     const fetchMock = createMockFetch();
     enqueueSuccess(fetchMock, { mappings: [] });

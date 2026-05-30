@@ -1,8 +1,12 @@
 import type { PaginationOptions } from '../../common/interfaces/pagination.js';
 
+/**
+ * camelCase input shape — `toSnakeCaseKeys` recurses into the array and
+ * converts to `relationship_id` / `target_concept_id` at the wire.
+ */
 export interface RelationshipFilter {
-  relationship_id: string;
-  target_concept_id?: number;
+  relationshipId: string;
+  targetConceptId?: number;
   direction?: 'forward' | 'reverse';
 }
 

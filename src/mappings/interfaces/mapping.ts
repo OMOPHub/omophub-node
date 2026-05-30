@@ -43,11 +43,21 @@ export interface MappingsListResult {
   summary?: MappingsSummary;
 }
 
-export interface FailedMapping {
-  source_concept_id?: number;
-  source_code?: { vocabulary_id: string; concept_code: string };
-  reason?: string;
-}
+/**
+ * Failed-mapping entry in `MapConceptsResult.failed_mappings`. Discriminated
+ * by which input variant the failure traces back to — every failed mapping
+ * carries either a `source_concept_id` (from the `sourceConcepts` input) or
+ * a `source_code` (from the `sourceCodes` input), never an empty object.
+ * `reason` is optional, mirroring `BatchConceptResult.failed_concepts` in
+ * `concepts/interfaces/`.
+ */
+export type FailedMapping =
+  | { source_concept_id: number; source_code?: never; reason?: string }
+  | {
+      source_concept_id?: never;
+      source_code: { vocabulary_id: string; concept_code: string };
+      reason?: string;
+    };
 
 export interface MapConceptsResult {
   mappings: Mapping[];

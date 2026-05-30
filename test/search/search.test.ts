@@ -183,7 +183,7 @@ describe('client.search.advanced', () => {
     await client.search.advanced('diabetes type 2', {
       vocabularyIds: ['SNOMED'],
       standardConceptsOnly: true,
-      relationshipFilters: [{ relationship_id: 'Is a' }],
+      relationshipFilters: [{ relationshipId: 'Is a', targetConceptId: 201826 }],
     });
     const { init } = lastCall(fetchMock);
     expect(init.method).toBe('POST');
@@ -192,7 +192,7 @@ describe('client.search.advanced', () => {
       query: 'diabetes type 2',
       vocabulary_ids: ['SNOMED'],
       standard_concepts_only: true,
-      relationship_filters: [{ relationship_id: 'Is a' }],
+      relationship_filters: [{ relationship_id: 'Is a', target_concept_id: 201826 }],
     });
   });
 });
@@ -233,6 +233,43 @@ describe('client.search.semantic', () => {
     expect(url).toContain('vocabulary_ids=SNOMED');
     expect(url).toContain('standard_concept=S');
     expect(url).toContain('threshold=0.85');
+  });
+
+  test('normalises a bare-array response into { results: [...] }', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, [
+      {
+        concept_id: 1,
+        concept_name: 'A',
+        vocabulary_id: 'X',
+        concept_code: 'a',
+        similarity_score: 0.9,
+      },
+    ]);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { data, error } = await client.search.semantic('q');
+    expect(error).toBeNull();
+    expect(data?.results).toHaveLength(1);
+    expect(data?.results[0]?.concept_id).toBe(1);
+  });
+
+  test('normalises legacy { data: [...] } shape into { results: [...] }', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, {
+      data: [
+        {
+          concept_id: 2,
+          concept_name: 'B',
+          vocabulary_id: 'X',
+          concept_code: 'b',
+          similarity_score: 0.7,
+        },
+      ],
+    });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { data } = await client.search.semantic('q');
+    expect(data?.results).toHaveLength(1);
+    expect(data?.results[0]?.concept_id).toBe(2);
   });
 });
 
@@ -435,6 +472,37 @@ describe('client.search.similar', () => {
       conceptName: 'x',
     } as unknown as Parameters<typeof client.search.similar>[0]);
     expect(error?.name).toBe('missing_required_field');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test('treats null/empty/NaN XOR values as not-provided (JS-caller hardening)', async () => {
+    const fetchMock = createMockFetch();
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    expect(
+      (
+        await client.search.similar({
+          conceptId: null,
+        } as unknown as Parameters<typeof client.search.similar>[0])
+      ).error?.name,
+    ).toBe('missing_required_field');
+
+    expect(
+      (
+        await client.search.similar({
+          query: '',
+        } as unknown as Parameters<typeof client.search.similar>[0])
+      ).error?.name,
+    ).toBe('missing_required_field');
+
+    expect(
+      (
+        await client.search.similar({
+          conceptId: Number.NaN,
+        } as unknown as Parameters<typeof client.search.similar>[0])
+      ).error?.name,
+    ).toBe('missing_required_field');
+
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

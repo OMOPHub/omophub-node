@@ -47,12 +47,12 @@ export class Mappings {
   async map(
     options: MapConceptsOptions & PostOptions,
   ): Promise<OMOPHubResponse<MapConceptsResult>> {
-    const hasConcepts = Array.isArray(options.sourceConcepts);
-    const hasCodes = Array.isArray(options.sourceCodes);
+    const hasConcepts = Array.isArray(options.sourceConcepts) && options.sourceConcepts.length > 0;
+    const hasCodes = Array.isArray(options.sourceCodes) && options.sourceCodes.length > 0;
     if (hasConcepts === hasCodes) {
       return syntheticError<MapConceptsResult>(
         'missing_required_field',
-        'Provide exactly one of `sourceConcepts` or `sourceCodes`.',
+        'Provide exactly one of `sourceConcepts` or `sourceCodes` with at least one entry.',
       );
     }
 
