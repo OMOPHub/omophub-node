@@ -1,0 +1,113 @@
+src/search/interfaces/index.ts
+  s_b724aff89835a7::t_6f98eb6b4c4ac9 1-34
+src/search/interfaces/basic-search-options.ts
+  s_b724aff89835a7::t_a1679646f38358 1-16
+src/index.ts
+  s_b724aff89835a7::t_41f402d33f5644 50-63,70-89
+  s_b724aff89835a7::t_5b36e88cc137b1 90-119
+src/search/interfaces/similar-search-options.ts
+  s_b724aff89835a7::t_9b8442fd3ce038 1-30
+src/search/interfaces/bulk-search.ts
+  s_b724aff89835a7::t_d845eb3e254847 1-64
+src/search/interfaces/bulk-semantic-options.ts
+  s_b724aff89835a7::t_0fc5c5bf9c9346 1-10
+test/common/utils/normalize-search-response.test.ts
+  s_b724aff89835a7::t_3a5540f3137902 1-60
+test/common/utils/paginate.test.ts
+  s_b724aff89835a7::t_57027708b5cfbb 1-121
+src/hierarchy/interfaces/index.ts
+  s_b724aff89835a7::t_1b5cf0143f679a 1-14
+test/hierarchy/hierarchy.test.ts
+  s_b724aff89835a7::t_aa0e84fbd51d57 1-11,13-84
+test/relationships/relationships.test.ts
+  s_b724aff89835a7::t_1b02fa0a809c2a 1-66
+src/hierarchy/interfaces/descendants-options.ts
+  s_b724aff89835a7::t_47ec0c269f8525 1-12
+src/common/utils/normalize-search-response.ts
+  s_b724aff89835a7::t_a492ff1d03c055 1-50,52,54-58
+src/relationships/interfaces/relationship.ts
+  s_b724aff89835a7::t_c38994ceba2745 1-31
+src/hierarchy/interfaces/get-hierarchy-options.ts
+  s_b724aff89835a7::t_e232065a1a47c1 1-11
+src/search/interfaces/similar-search-result.ts
+  s_b724aff89835a7::t_f39a2f42eedf6e 1-29
+src/common/utils/index.ts
+  s_b724aff89835a7::t_9972fbb6ba4166 5-14
+src/search/search.ts
+  s_b724aff89835a7::t_49522671b3df8d 316,320,323,330-332
+  s_b724aff89835a7::t_99b526d026d1b1 111-114
+  s_b724aff89835a7::t_b942cb6bd380aa 86-89
+  s_b724aff89835a7::t_f83f7f120a26ab 1-5,7,9-85,90-110,115-200,202-225,227-315,317-319,321-322,324-329,333-335
+src/search/interfaces/semantic-search-result.ts
+  s_b724aff89835a7::t_6289ac0b445235 1-21
+src/relationships/interfaces/index.ts
+  s_b724aff89835a7::t_7acef7314d2972 1-8
+src/mappings/interfaces/map-concepts-options.ts
+  s_b724aff89835a7::t_f9311948810c62 1-28
+src/mappings/interfaces/mapping.ts
+  s_b724aff89835a7::t_8ba53ce1d5f182 1-65
+src/mappings/interfaces/index.ts
+  s_b724aff89835a7::t_8b5d35e96fbb15 1-12
+src/search/interfaces/semantic-search-options.ts
+  s_b724aff89835a7::t_2dfb25ab69cb99 1-10
+src/hierarchy/interfaces/hierarchy.ts
+  s_b724aff89835a7::t_7a568beba6e520 1-55
+src/search/interfaces/bulk-basic-options.ts
+  s_b724aff89835a7::t_696ea6386cf84b 1-6
+src/common/utils/paginate.ts
+  s_b724aff89835a7::t_3c101b6e541936 1-107
+src/concepts/interfaces/concept.ts
+  s_b724aff89835a7::t_9b1de5960c6764 41-43
+src/hierarchy/interfaces/ancestors-options.ts
+  s_b724aff89835a7::t_a1460f712ce8ba 1-11
+src/relationships/interfaces/list-relationship-types-options.ts
+  s_b724aff89835a7::t_ae5c67e41c2b6f 1-3
+src/mappings/interfaces/get-mappings-options.ts
+  s_b724aff89835a7::t_db211d55c635c2 1-7
+src/relationships/interfaces/get-relationships-options.ts
+  s_b724aff89835a7::t_027e9d1fa5428c 1-19
+src/search/interfaces/autocomplete-options.ts
+  s_b724aff89835a7::t_f9ec2eecbf8701 1-6
+src/relationships/relationships.ts
+  s_b724aff89835a7::t_769f28061ef70d 1-5,7-47
+test/search/search.test.ts
+  s_b724aff89835a7::t_103c6442e32adf 1-250,253-265,268-337,339-440
+src/search/interfaces/advanced-search-options.ts
+  s_b724aff89835a7::t_bce295821bb77e 1-17
+CHANGELOG.md
+  s_b724aff89835a7::t_50eac2b076d977 41,47-49
+  s_b724aff89835a7::t_4740af6c1f2a0b 42-46
+src/hierarchy/hierarchy.ts
+  s_b724aff89835a7::t_fcb3b4079ad84c 1-66
+src/search/interfaces/paginate-options.ts
+  s_b724aff89835a7::t_4d20fc7086f0d0 1-9
+src/client.ts
+  s_b724aff89835a7::t_07ab2eb16e87b1 105-107
+  s_b724aff89835a7::t_efb246d75b3473 75
+  s_b724aff89835a7::t_fb2bd155fd9e5b 72-74
+  s_b724aff89835a7::t_6f78179adfa486 21
+  s_b724aff89835a7::t_3659834a5de92c 17,19-20
+  s_b724aff89835a7::t_459f73555cb13d 108
+src/mappings/mappings.ts
+  s_b724aff89835a7::t_5a73c995031af6 1-68
+src/search/interfaces/search-result.ts
+  s_b724aff89835a7::t_8a7ffd077e83c4 1-35
+test/mappings/mappings.test.ts
+  s_b724aff89835a7::t_18ae9a2e9b8080 1-93,96-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6d3eeab1d569d3f0b52a786c60db55d918586c03",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
