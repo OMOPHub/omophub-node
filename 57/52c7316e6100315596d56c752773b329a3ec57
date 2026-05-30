@@ -1,0 +1,34 @@
+test/mappings/mappings.test.ts
+  s_b724aff89835a7::t_1739b50a3f5e83 113-135
+src/mappings/interfaces/mapping.ts
+  s_b724aff89835a7::t_258e76c5954d0b 46-60
+src/concepts/interfaces/concept-relationships-options.ts
+  s_b724aff89835a7::t_cf1f8c1cf51dd6 1,7,10-13,15
+test/search/search.test.ts
+  s_b724aff89835a7::t_4f93d58fb59b25 477-507
+  s_b724aff89835a7::t_bcc29d281a9fc7 237-273
+  s_b724aff89835a7::t_eba3517e01dd9d 186,195
+src/mappings/mappings.ts
+  s_b724aff89835a7::t_13ffda8bef4c43 50-51,55
+src/search/interfaces/advanced-search-options.ts
+  s_b724aff89835a7::t_03faf78d7ee24d 3-6,8-9
+src/search/search.ts
+  s_b724aff89835a7::t_e6f3d7403efdd5 171-175,182,187-205
+  s_b724aff89835a7::t_4745c6705729d5 322-331,335
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5752c7316e6100315596d56c752773b329a3ec57",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
