@@ -38,6 +38,15 @@ All notable changes to this project will be documented in this file. The format 
 - `client.concepts` — 7 methods: `get`, `getByCode`, `batch`, `suggest`, `related`, `relationships`, `recommended`. `concepts.get(0)` accepts the OMOP unmapped sentinel (R-SDK bug fix). `batch` validates 1–100 IDs synthetically; `recommended` validates `conceptIds` ≤ 100, `relationshipTypes` ≤ 20, `vocabularyIds`/`domainIds` ≤ 50.
 - `client.vocabularies` extended with 6 methods: `get`, `stats`, `domainStats`, `domains` (vocab-scoped), `conceptClasses`, `concepts`.
 - `client.domains` — 2 methods: `list`, `concepts`.
+- `client.search` — 11 methods: `basic`, `basicIter`, `basicAll`, `advanced`, `autocomplete`, `semantic`, `semanticIter`, `semanticAll`, `bulkBasic`, `bulkSemantic`, `similar`. `bulkBasic` validates 1–50 searches; `bulkSemantic` validates 1–25; `similar` enforces XOR of `conceptId`/`conceptName`/`query` both at the TS type level (discriminated union) and at runtime.
+- `client.hierarchy` — 3 methods: `get` (flat or graph format), `ancestors`, `descendants`. Server caps `maxLevels` at 20.
+- `client.relationships` — 2 methods: `get` (shares wire endpoint with `concepts.relationships` — kept as parallel discoverable surface), `types`.
+- `client.mappings` — 2 methods: `get` and `map`. `map` enforces XOR of `sourceConcepts` vs `sourceCodes` at both type and runtime levels. `vocabRelease` is routed to the `?vocab_release=` query parameter rather than the JSON body (matches Python SDK convention). JSDoc documents the Procedure-domain vocabulary priority chain (SNOMED → LOINC → CPT4 → HCPCS → ICD10PCS → ICD9Proc → OPCS4 → OMOP Extension).
+- `ConceptHierarchyNode` extended with `domain_id`, `concept_class_id`, `standard_concept` optional fields — now matches Python's `HierarchyConcept` and is re-exported as `HierarchyConcept`/`Ancestor`/`Descendant` from the hierarchy module.
+- `ConceptRelationship` re-exported as `Relationship` from the relationships module — kept in sync via type alias.
+- `basic` and `advanced` normalise three known server response shapes (`{ concepts, facets, search_metadata }`, legacy `{ data: [...] }`, bare `Concept[]`) into a stable `SearchResult` — addresses the cross-SDK shape drift documented in `project_search_api_response_shapes.md`.
+- `similar` uses a two-arg `(options, requestOptions)` signature (not the merged style) because its `query` XOR field would otherwise collide with `PerCallOptions.query`.
+- `paginate<T>()` async generator and `paginateAll<T>()` eager collector in `common/utils/` — generic page-walking helpers used by the search `*Iter` / `*All` variants. The async generator throws `OMOPHubIteratorError` on page failure; `paginateAll` accumulates errors as values.
 - `syntheticError<T>(name, message, details?)` helper in `common/utils/` — builds wire-shaped errors for client-side validation without issuing a network call.
 
 <!-- No compare link yet — first tag will be created on the v0.1.0 release. -->
