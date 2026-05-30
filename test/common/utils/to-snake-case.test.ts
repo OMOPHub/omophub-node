@@ -56,4 +56,33 @@ describe('toSnakeCaseKeys', () => {
     const input = [{ conceptId: 1 }, { conceptId: 2 }];
     expect(toSnakeCaseKeys(input)).toEqual([{ concept_id: 1 }, { concept_id: 2 }]);
   });
+
+  test('preserves Date instances rather than collapsing them to {}', () => {
+    const d = new Date('2026-05-29T00:00:00Z');
+    const input = { startedAt: d, count: 5 };
+    const out = toSnakeCaseKeys(input);
+    expect(out).toEqual({ started_at: d, count: 5 });
+    expect(out.started_at).toBeInstanceOf(Date);
+  });
+
+  test('preserves Map and Set instances', () => {
+    const m = new Map([['a', 1]]);
+    const s = new Set([1, 2]);
+    const out = toSnakeCaseKeys({ someMap: m, someSet: s });
+    expect(out.some_map).toBe(m);
+    expect(out.some_set).toBe(s);
+  });
+
+  test('preserves user class instances', () => {
+    class Coding {
+      constructor(
+        public system: string,
+        public code: string,
+      ) {}
+    }
+    const c = new Coding('http://snomed.info/sct', '44054006');
+    const out = toSnakeCaseKeys({ sourceCoding: c });
+    expect(out.source_coding).toBe(c);
+    expect(out.source_coding).toBeInstanceOf(Coding);
+  });
 });

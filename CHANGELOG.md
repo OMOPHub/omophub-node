@@ -31,6 +31,14 @@ All notable changes to this project will be documented in this file. The format 
 - Retries are now gated by `isRetryableRequest(method, headers)`: idempotent verbs (GET/HEAD/OPTIONS/PUT/DELETE) always retry, but POST/PATCH only retry when an `Idempotency-Key` header is set. Prevents accidental duplicate writes on transient failures.
 - Response body is drained via `response.body?.cancel()` before sleeping for a retry, releasing the undici connection back to the pool.
 - `publishConfig.access` set to `public` so scoped-package publishes don't fall through to npm's default restricted access.
+- **Resource method shape switched from "two options objects" to "positional path args + merged options"** — e.g. `client.concepts.get(201826, { includeRelationships: true })` rather than `client.concepts.get({ conceptId: 201826, includeRelationships: true })`. Matches Python/R ergonomics. `vocabularies.list` migrated to the new shape.
+
+### Added (resources)
+
+- `client.concepts` — 7 methods: `get`, `getByCode`, `batch`, `suggest`, `related`, `relationships`, `recommended`. `concepts.get(0)` accepts the OMOP unmapped sentinel (R-SDK bug fix). `batch` validates 1–100 IDs synthetically; `recommended` validates `conceptIds` ≤ 100, `relationshipTypes` ≤ 20, `vocabularyIds`/`domainIds` ≤ 50.
+- `client.vocabularies` extended with 6 methods: `get`, `stats`, `domainStats`, `domains` (vocab-scoped), `conceptClasses`, `concepts`.
+- `client.domains` — 2 methods: `list`, `concepts`.
+- `syntheticError<T>(name, message, details?)` helper in `common/utils/` — builds wire-shaped errors for client-side validation without issuing a network call.
 
 <!-- No compare link yet — first tag will be created on the v0.1.0 release. -->
 

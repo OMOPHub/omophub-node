@@ -56,12 +56,12 @@ export async function parseErrorResponse(response: Response): Promise<ErrorRespo
   };
   if (requestId) error.requestId = requestId;
 
-  if (status === 429) {
-    const retryAfterHeader = response.headers.get('retry-after');
-    if (retryAfterHeader) {
-      const seconds = parseRetryAfter(retryAfterHeader);
-      if (seconds !== null) error.retryAfter = seconds;
-    }
+  // Retry-After is most common on 429 but RFC 7231 §7.1.3 also allows
+  // it on 503 / 502 / 504 — surface whenever the server sends it.
+  const retryAfterHeader = response.headers.get('retry-after');
+  if (retryAfterHeader) {
+    const seconds = parseRetryAfter(retryAfterHeader);
+    if (seconds !== null) error.retryAfter = seconds;
   }
 
   const details = extractDetails(parsed);
@@ -111,13 +111,9 @@ function extractDetails(body: unknown): Record<string, unknown> | undefined {
 }
 
 function pickErrorCode(status: number, body: unknown): OMOPHUB_ERROR_CODE_KEY {
-  const mapped = STATUS_TO_CODE[status];
-  if (mapped) return mapped;
-
-  if (status >= 500 && status < 600) {
-    return status === 503 ? 'service_unavailable' : 'internal_server_error';
-  }
-
+  // Server-supplied codes are more specific than the generic HTTP-status
+  // bucket — e.g. a 400 with `error.code: 'missing_required_field'` should
+  // surface that, not the generic `validation_error`. Check body first.
   if (body && typeof body === 'object') {
     const b = body as Record<string, unknown>;
     const inner =
@@ -127,5 +123,13 @@ function pickErrorCode(status: number, body: unknown): OMOPHUB_ERROR_CODE_KEY {
       return candidate as OMOPHUB_ERROR_CODE_KEY;
     }
   }
+
+  const mapped = STATUS_TO_CODE[status];
+  if (mapped) return mapped;
+
+  if (status >= 500 && status < 600) {
+    return status === 503 ? 'service_unavailable' : 'internal_server_error';
+  }
+
   return 'application_error';
 }

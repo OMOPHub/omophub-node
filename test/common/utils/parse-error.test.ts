@@ -102,6 +102,24 @@ describe('parseErrorResponse', () => {
     );
     expect(err.name).toBe('tier_limit_exceeded');
   });
+
+  test('body error code wins over the status map when both are present', async () => {
+    const err = await parseErrorResponse(
+      makeResponse(400, {
+        success: false,
+        error: { code: 'missing_required_field', message: 'no concept_id' },
+      }),
+    );
+    expect(err.name).toBe('missing_required_field');
+  });
+
+  test('parses Retry-After on 503 (not just 429)', async () => {
+    const err = await parseErrorResponse(
+      makeResponse(503, { message: 'down' }, { 'retry-after': '30' }),
+    );
+    expect(err.name).toBe('service_unavailable');
+    expect(err.retryAfter).toBe(30);
+  });
 });
 
 describe('connectionError', () => {

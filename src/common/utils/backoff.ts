@@ -12,19 +12,18 @@ export function isRetryableStatus(status: number): boolean {
 /**
  * Computes the delay before the next retry attempt.
  *
- * - Honours `Retry-After` header (seconds or HTTP-date) up to a 60s cap,
- *   floored to a 100ms minimum so a `Retry-After: 0` doesn't translate to
- *   an immediate-spam retry.
- * - Otherwise full-jitter exponential backoff:
- *   `min(500 * 2^attempt, 8000) * (1 - 0.25 * random())`
- *
- * Mirrors the OMOPHub Python SDK's `_calculate_retry_delay`.
+ * - Honours `Retry-After` header (seconds or HTTP-date) — clamped to
+ *   `[100ms, 60s]`. A value of 0 becomes 100ms (no spam-retry) and a
+ *   value over 60s is capped at 60s (the server's signal isn't ignored).
+ * - When no Retry-After is present, full-jitter exponential backoff:
+ *   `min(500 * 2^attempt, 8000) * (1 - 0.25 * random())`.
  */
 export function backoffMs(attempt: number, retryAfter: string | null): number {
   if (retryAfter) {
     const seconds = parseRetryAfter(retryAfter);
-    if (seconds !== null && seconds <= MAX_RETRY_AFTER_SEC) {
-      return Math.max(seconds * 1000, MIN_RETRY_AFTER_MS);
+    if (seconds !== null) {
+      const cappedMs = Math.min(seconds, MAX_RETRY_AFTER_SEC) * 1000;
+      return Math.max(cappedMs, MIN_RETRY_AFTER_MS);
     }
   }
   const exp = Math.min(INITIAL_DELAY_MS * 2 ** attempt, MAX_DELAY_MS);

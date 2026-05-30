@@ -1,4 +1,6 @@
 import type { PaginationMeta } from '../../src/common/interfaces/pagination.js';
+import type { Concept } from '../../src/concepts/interfaces/concept.js';
+import type { Domain } from '../../src/domains/interfaces/domain.js';
 import type { Vocabulary } from '../../src/vocabularies/interfaces/vocabulary.js';
 
 export const DIABETES_CONCEPT_ID = 201826;
@@ -43,4 +45,24 @@ export const mockApiErrorBody = (
 ) => ({
   success: false as const,
   error: details ? { code, message, details } : { code, message },
+});
+
+export const mockConcept = (overrides: Partial<Concept> = {}): Concept => ({
+  concept_id: DIABETES_CONCEPT_ID,
+  concept_name: 'Type 2 diabetes mellitus',
+  vocabulary_id: 'SNOMED',
+  concept_code: '44054006',
+  domain_id: 'Condition',
+  concept_class_id: 'Clinical Finding',
+  standard_concept: 'S',
+  valid_start_date: '2002-01-31',
+  valid_end_date: '2099-12-31',
+  ...overrides,
+});
+
+export const mockDomain = (overrides: Partial<Domain> = {}): Domain => ({
+  domain_id: 'Condition',
+  domain_name: 'Condition',
+  domain_concept_id: 19,
+  ...overrides,
 });

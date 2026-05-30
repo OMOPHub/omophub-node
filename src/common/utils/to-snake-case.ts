@@ -19,14 +19,16 @@ export function camelToSnakeCase(input: string): string {
 
 /**
  * Recursively converts an object's keys from camelCase to snake_case.
- * Arrays are mapped element-wise; primitives pass through. Used for
- * request bodies only — responses stay snake_case to match the API.
+ * Arrays are mapped element-wise; primitives and non-plain objects
+ * (Date, Map, Set, class instances, etc.) pass through unchanged so we
+ * don't silently flatten them to `{}`. Used for request bodies only —
+ * responses stay snake_case to match the API.
  */
 export function toSnakeCaseKeys<T>(input: T): T {
   if (Array.isArray(input)) {
     return input.map((item) => toSnakeCaseKeys(item)) as unknown as T;
   }
-  if (input !== null && typeof input === 'object') {
+  if (isPlainObject(input)) {
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(input)) {
       out[camelToSnakeCase(k)] = toSnakeCaseKeys(v);
@@ -34,4 +36,15 @@ export function toSnakeCaseKeys<T>(input: T): T {
     return out as T;
   }
   return input;
+}
+
+/**
+ * Plain object = `{}` literal or `Object.create(null)`. Anything with a
+ * non-Object prototype (Date, Buffer, URL, Map, Set, user classes) is
+ * excluded so its data is preserved as-is.
+ */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object') return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === null || proto === Object.prototype;
 }

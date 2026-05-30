@@ -1,8 +1,6 @@
 # @omophub/omophub-node
 
-Official Node.js / TypeScript SDK for the [OMOPHub API](https://omophub.com) — search, lookup, map, and navigate OHDSI medical vocabularies (SNOMED, ICD10, RxNorm, LOINC, and 100+ more) from JavaScript.
-
-> **Status — v0.0.x scaffold.** Public API surfaces (concepts, search, vocabularies, hierarchy, mappings, FHIR) ship in upcoming releases. See [`docs/omophub-node-sdk-implementation-plan.md`](https://github.com/OMOPHub/oh-platform) in the platform repo for the roadmap.
+Official Node.js / TypeScript SDK for [OMOPHub](https://omophub.com) — search, lookup, map, and navigate OHDSI medical vocabularies (SNOMED, ICD10, RxNorm, LOINC, and 100+ more) from JavaScript. API reference at [docs.omophub.com](https://docs.omophub.com).
 
 ## Install
 
@@ -10,7 +8,7 @@ Official Node.js / TypeScript SDK for the [OMOPHub API](https://omophub.com) —
 npm install @omophub/omophub-node
 ```
 
-Requires Node ≥ 20. Runs in Node, modern browsers (CORS permitting), and edge runtimes (Cloudflare Workers, Vercel Edge).
+Requires Node ≥ 22. Runs in Node, modern browsers (CORS permitting), and edge runtimes (Cloudflare Workers, Vercel Edge).
 
 ## Quick start
 

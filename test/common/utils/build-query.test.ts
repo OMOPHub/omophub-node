@@ -35,6 +35,12 @@ describe('buildQuery', () => {
       'page=1&page_size=50&include_stats=true',
     );
   });
+
+  test('deduplicates keys after snake-case conversion — last write wins', () => {
+    // Simulates `{ ...flags (camelCase), ...userQuery (snake_case) }` merge.
+    // Without dedup, the URL would carry `page_size=10&page_size=20`.
+    expect(buildQuery({ pageSize: 10, page_size: 20 })).toBe('page_size=20');
+  });
 });
 
 describe('appendQuery', () => {

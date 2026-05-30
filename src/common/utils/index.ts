@@ -4,5 +4,6 @@ export { envOr, envOrUndefined } from './env.js';
 export { mergeHeaders } from './merge-headers.js';
 export { connectionError, parseErrorResponse, timeoutError } from './parse-error.js';
 export { sleep } from './sleep.js';
+export { syntheticError } from './synthetic-error.js';
 export { camelToSnakeCase, toSnakeCaseKeys } from './to-snake-case.js';
 export { type UnwrappedEnvelope, unwrapEnvelope } from './unwrap-envelope.js';

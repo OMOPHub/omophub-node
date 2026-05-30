@@ -31,9 +31,13 @@ describe('backoffMs', () => {
     expect(backoffMs(5, '30')).toBe(30_000);
   });
 
-  test('ignores Retry-After above 60s and falls back to exponential', () => {
-    // 0.25 jitter mocked to 0 → no scaling
-    expect(backoffMs(0, '120')).toBe(500);
+  test('caps Retry-After above 60s at 60s rather than dropping it', () => {
+    expect(backoffMs(0, '120')).toBe(60_000);
+    expect(backoffMs(0, '600')).toBe(60_000);
+  });
+
+  test('floors Retry-After of 0 at the 100ms minimum to avoid spam-retry', () => {
+    expect(backoffMs(0, '0')).toBe(100);
   });
 
   test('exponential backoff doubles per attempt, capped at 8s', () => {

@@ -26,3 +26,23 @@ export interface VocabularyStats {
 export interface VocabularySummary extends Vocabulary {
   stats?: VocabularyStats;
 }
+
+/**
+ * Domain entry returned by `GET /vocabularies/domains`. Distinct from
+ * the richer `Domain` type returned by `GET /domains` — this one is
+ * scoped to the vocabulary catalog.
+ */
+export interface VocabularyDomain {
+  domain_id: string;
+  domain_name: string;
+  domain_concept_id?: number;
+}
+
+/**
+ * Concept-class entry returned by `GET /vocabularies/concept-classes`.
+ */
+export interface ConceptClass {
+  concept_class_id: string;
+  concept_class_name: string;
+  concept_class_concept_id?: number;
+}

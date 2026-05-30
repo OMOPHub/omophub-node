@@ -11,6 +11,8 @@ import { mergeHeaders } from './common/utils/merge-headers.js';
 import { connectionError, parseErrorResponse, timeoutError } from './common/utils/parse-error.js';
 import { sleep } from './common/utils/sleep.js';
 import { unwrapEnvelope } from './common/utils/unwrap-envelope.js';
+import { Concepts } from './concepts/concepts.js';
+import { Domains } from './domains/domains.js';
 import { OMOPHubError } from './errors.js';
 import type { Response as OMOPHubResponse } from './interfaces.js';
 import { __version__ } from './version.js';
@@ -61,6 +63,8 @@ export class OMOPHub {
   readonly #headers: Headers;
   readonly #fetch: typeof fetch;
 
+  readonly concepts: Concepts;
+  readonly domains: Domains;
   readonly vocabularies: Vocabularies;
 
   constructor(apiKey?: string, options: OMOPHubOptions = {}) {
@@ -88,6 +92,8 @@ export class OMOPHub {
     const fetchImpl = options.fetch ?? globalThis.fetch;
     this.#fetch = fetchImpl.bind(globalThis);
 
+    this.concepts = new Concepts(this);
+    this.domains = new Domains(this);
     this.vocabularies = new Vocabularies(this);
   }
 

@@ -8,6 +8,10 @@ import { camelToSnakeCase } from './to-snake-case.js';
  * - Arrays are comma-joined (matches the OMOPHub API convention).
  * - Empty arrays are dropped.
  * - Booleans and numbers are stringified.
+ * - Duplicates (after snake-casing) are last-write-wins via `set`, so a
+ *   resource that spreads `{ ...flags, ...userQuery }` lets explicit
+ *   user-supplied keys override the SDK's defaults predictably — whether
+ *   the user wrote `pageSize` or `page_size`.
  *
  * Returns the encoded query body **without** a leading `?`.
  */
@@ -19,9 +23,9 @@ export function buildQuery(params: Record<string, QueryValue> | undefined): stri
     const snakeKey = camelToSnakeCase(key);
     if (Array.isArray(value)) {
       if (value.length === 0) continue;
-      search.append(snakeKey, value.join(','));
+      search.set(snakeKey, value.join(','));
     } else {
-      search.append(snakeKey, String(value));
+      search.set(snakeKey, String(value));
     }
   }
   return search.toString();

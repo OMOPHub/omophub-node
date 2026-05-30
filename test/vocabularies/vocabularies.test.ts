@@ -85,14 +85,108 @@ describe('client.vocabularies.list', () => {
     enqueueSuccess(fetchMock, { data: [], meta: { pagination: mockPagination() } });
 
     const client = new OMOPHub('oh_test', { fetch: fetchMock });
-    await client.vocabularies.list(
-      { pageSize: 10 },
-      { query: { vocab_release: '2025.1', trace: true } },
-    );
+    await client.vocabularies.list({
+      pageSize: 10,
+      query: { vocab_release: '2025.1', trace: true },
+    });
 
     const { url } = lastCall(fetchMock);
     expect(url).toContain('page_size=10');
     expect(url).toContain('vocab_release=2025.1');
     expect(url).toContain('trace=true');
+  });
+});
+
+describe('client.vocabularies new methods', () => {
+  test('get hits /vocabularies/{id}', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, mockVocabulary());
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { data, error } = await client.vocabularies.get('SNOMED');
+    expect(error).toBeNull();
+    expect(data?.vocabulary_id).toBe('SNOMED');
+    expect(lastCall(fetchMock).url).toBe('https://api.omophub.com/v1/vocabularies/SNOMED');
+  });
+
+  test('get URL-encodes the vocabulary ID', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, mockVocabulary());
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.vocabularies.get('Vocab With Spaces');
+    expect(lastCall(fetchMock).url).toBe(
+      'https://api.omophub.com/v1/vocabularies/Vocab%20With%20Spaces',
+    );
+  });
+
+  test('stats hits /vocabularies/{id}/stats', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { vocabulary_id: 'SNOMED', total_concepts: 350_000 });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.vocabularies.stats('SNOMED');
+    expect(lastCall(fetchMock).url).toBe('https://api.omophub.com/v1/vocabularies/SNOMED/stats');
+  });
+
+  test('domainStats hits /vocabularies/{vocab}/stats/domains/{domain}', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { domain_id: 'Condition' });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.vocabularies.domainStats('SNOMED', 'Condition');
+    expect(lastCall(fetchMock).url).toBe(
+      'https://api.omophub.com/v1/vocabularies/SNOMED/stats/domains/Condition',
+    );
+  });
+
+  test('domains hits /vocabularies/domains (vocab-scoped, NOT /domains)', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, [{ domain_id: 'Condition', domain_name: 'Condition' }]);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { data, error } = await client.vocabularies.domains();
+    expect(error).toBeNull();
+    expect(data?.[0]?.domain_id).toBe('Condition');
+    expect(lastCall(fetchMock).url).toBe('https://api.omophub.com/v1/vocabularies/domains');
+  });
+
+  test('conceptClasses hits /vocabularies/concept-classes', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, [
+      { concept_class_id: 'Clinical Finding', concept_class_name: 'Clinical Finding' },
+    ]);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.vocabularies.conceptClasses();
+    expect(lastCall(fetchMock).url).toBe('https://api.omophub.com/v1/vocabularies/concept-classes');
+  });
+
+  test('concepts hits /vocabularies/{id}/concepts with snake-cased options', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { data: [], meta: { pagination: mockPagination() } });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.vocabularies.concepts('SNOMED', {
+      search: 'diabetes',
+      standardConcept: 'S',
+      includeInvalid: false,
+      page: 2,
+      pageSize: 50,
+      sortBy: 'name',
+      sortOrder: 'asc',
+    });
+
+    const { url } = lastCall(fetchMock);
+    expect(url).toContain('/vocabularies/SNOMED/concepts');
+    expect(url).toContain('search=diabetes');
+    expect(url).toContain('standard_concept=S');
+    expect(url).toContain('include_invalid=false');
+    expect(url).toContain('page=2');
+    expect(url).toContain('page_size=50');
+    expect(url).toContain('sort_by=name');
+    expect(url).toContain('sort_order=asc');
+  });
+
+  test('returns ErrorResponse on 404 for unknown vocabulary', async () => {
+    const fetchMock = createMockFetch();
+    enqueueError(fetchMock, 404, mockApiErrorBody('not_found', 'vocabulary missing'));
+    const client = new OMOPHub('oh_test', { fetch: fetchMock, maxRetries: 0 });
+    const { data, error } = await client.vocabularies.get('NOPE');
+    expect(data).toBeNull();
+    expect(error?.name).toBe('not_found');
   });
 });

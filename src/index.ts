@@ -18,6 +18,34 @@ export type {
   RequireExactlyOne,
   VocabReleaseMixin,
 } from './common/interfaces/index.js';
+export type {
+  BatchConceptResult,
+  BatchConceptsOptions,
+  Concept,
+  ConceptHierarchyNode,
+  ConceptRecommendation,
+  ConceptRelationship,
+  ConceptRelationshipsOptions,
+  ConceptRelationshipsResult,
+  ConceptSuggestion,
+  ConceptSummary,
+  GetConceptByCodeOptions,
+  GetConceptOptions,
+  RecommendedConceptsOptions,
+  RecommendedConceptsResult,
+  RelatedConcept,
+  RelatedConceptsOptions,
+  RelatedConceptsResult,
+  SuggestConceptsOptions,
+  Synonym,
+} from './concepts/interfaces/index.js';
+export type {
+  Domain,
+  DomainConceptsOptions,
+  DomainStats,
+  DomainSummary,
+  ListDomainsOptions,
+} from './domains/interfaces/index.js';
 export { OMOPHubError, OMOPHubIteratorError } from './errors.js';
 export type {
   ErrorResponse,
@@ -27,8 +55,11 @@ export type {
 } from './interfaces.js';
 export { __version__ } from './version.js';
 export type {
+  ConceptClass,
   ListVocabulariesOptions,
   Vocabulary,
+  VocabularyConceptsOptions,
+  VocabularyDomain,
   VocabularyStats,
   VocabularySummary,
 } from './vocabularies/interfaces/index.js';

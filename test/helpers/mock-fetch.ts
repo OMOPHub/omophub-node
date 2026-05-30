@@ -37,9 +37,12 @@ export function enqueueRawBody(
 export function enqueueError(
   fetchMock: MockFetch,
   status: number,
+  // Default body omits `error.code` so the HTTP-status → error-name mapping
+  // in parseErrorResponse drives the outcome. Tests that want to assert
+  // a specific server-supplied code pass it explicitly.
   body: unknown = {
     success: false,
-    error: { code: 'application_error', message: `HTTP ${status}` },
+    error: { message: `HTTP ${status}` },
   },
   headers: Record<string, string> = {},
 ): void {
