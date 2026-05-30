@@ -14,7 +14,11 @@ import { unwrapEnvelope } from './common/utils/unwrap-envelope.js';
 import { Concepts } from './concepts/concepts.js';
 import { Domains } from './domains/domains.js';
 import { OMOPHubError } from './errors.js';
+import { Hierarchy } from './hierarchy/hierarchy.js';
 import type { Response as OMOPHubResponse } from './interfaces.js';
+import { Mappings } from './mappings/mappings.js';
+import { Relationships } from './relationships/relationships.js';
+import { Search } from './search/search.js';
 import { __version__ } from './version.js';
 import { Vocabularies } from './vocabularies/vocabularies.js';
 
@@ -65,6 +69,10 @@ export class OMOPHub {
 
   readonly concepts: Concepts;
   readonly domains: Domains;
+  readonly hierarchy: Hierarchy;
+  readonly mappings: Mappings;
+  readonly relationships: Relationships;
+  readonly search: Search;
   readonly vocabularies: Vocabularies;
 
   constructor(apiKey?: string, options: OMOPHubOptions = {}) {
@@ -94,6 +102,10 @@ export class OMOPHub {
 
     this.concepts = new Concepts(this);
     this.domains = new Domains(this);
+    this.hierarchy = new Hierarchy(this);
+    this.mappings = new Mappings(this);
+    this.relationships = new Relationships(this);
+    this.search = new Search(this);
     this.vocabularies = new Vocabularies(this);
   }
 

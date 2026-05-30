@@ -48,11 +48,75 @@ export type {
 } from './domains/interfaces/index.js';
 export { OMOPHubError, OMOPHubIteratorError } from './errors.js';
 export type {
+  Ancestor,
+  AncestorsOptions,
+  AncestorsResult,
+  Descendant,
+  DescendantsOptions,
+  DescendantsResult,
+  GetHierarchyOptions,
+  HierarchyConcept,
+  HierarchyEdge,
+  HierarchyPath,
+  HierarchyResult,
+  HierarchySummary,
+} from './hierarchy/interfaces/index.js';
+export type {
   ErrorResponse,
   OMOPHUB_ERROR_CODE_KEY,
   Response,
   ResponseMeta,
 } from './interfaces.js';
+export type {
+  FailedMapping,
+  GetMappingsOptions,
+  MapConceptsOptions,
+  MapConceptsResult,
+  Mapping,
+  MappingContext,
+  MappingQuality,
+  MappingsListResult,
+  MappingsSummary,
+  SourceCodeRef,
+} from './mappings/interfaces/index.js';
+export type {
+  GetRelationshipsOptions,
+  ListRelationshipTypesOptions,
+  Relationship,
+  RelationshipsResult,
+  RelationshipType,
+  RelationshipTypesResult,
+} from './relationships/interfaces/index.js';
+export type {
+  AdvancedSearchOptions,
+  AutocompleteOptions,
+  BasicSearchOptions,
+  BulkBasicOptions,
+  BulkBasicResultItem,
+  BulkBasicSearchInput,
+  BulkBasicSearchResponse,
+  BulkSearchDefaults,
+  BulkSearchStatus,
+  BulkSemanticDefaults,
+  BulkSemanticOptions,
+  BulkSemanticResultItem,
+  BulkSemanticSearchInput,
+  BulkSemanticSearchResponse,
+  PaginateOptions,
+  RelationshipFilter,
+  SearchFacet,
+  SearchFacets,
+  SearchMetadata,
+  SearchResult,
+  SemanticSearchMetadata,
+  SemanticSearchOptions,
+  SemanticSearchResult,
+  SemanticSearchResultSet,
+  SimilarConcept,
+  SimilarSearchMetadata,
+  SimilarSearchOptions,
+  SimilarSearchResult,
+} from './search/interfaces/index.js';
 export { __version__ } from './version.js';
 export type {
   ConceptClass,

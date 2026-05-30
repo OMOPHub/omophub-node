@@ -38,6 +38,9 @@ export interface ConceptHierarchyNode {
   concept_name: string;
   vocabulary_id: string;
   concept_code: string;
+  domain_id?: string;
+  concept_class_id?: string;
+  standard_concept?: 'S' | 'C' | 'N' | null;
   level?: number;
   min_levels_of_separation?: number;
   max_levels_of_separation?: number;
