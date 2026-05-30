@@ -93,6 +93,9 @@ export class Concepts {
    * Auto-complete suggestions for a free-text query.
    *
    * `query` is positional so it doesn't collide with `PerCallOptions.query`.
+   * The positional value is spread LAST so a stray `query` key inside
+   * `options.query` (the escape-hatch params map) cannot silently override
+   * the method's primary argument.
    */
   async suggest(
     query: string,
@@ -101,7 +104,7 @@ export class Concepts {
     const { signal, headers, query: extraQuery, ...flags } = options;
     return this.client.get<ConceptSuggestion[] | PaginatedData<ConceptSuggestion>>(
       '/concepts/suggest',
-      { signal, headers, query: { query, ...flags, ...extraQuery } },
+      { signal, headers, query: { ...flags, ...extraQuery, query } },
     );
   }
 

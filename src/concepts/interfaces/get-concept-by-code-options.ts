@@ -1,7 +1,9 @@
-import type { VocabReleaseMixin } from '../../common/interfaces/vocab-release.js';
+import type { GetConceptOptions } from './get-concept-options.js';
 
-export interface GetConceptByCodeOptions extends VocabReleaseMixin {
-  includeRelationships?: boolean;
-  includeSynonyms?: boolean;
-  includeHierarchy?: boolean;
-}
+/**
+ * `get` and `getByCode` accept the same optional flags — the only
+ * difference is how the concept is identified (numeric ID vs.
+ * vocabulary+code). Aliased rather than duplicated so any new option
+ * added to `GetConceptOptions` automatically propagates here.
+ */
+export type GetConceptByCodeOptions = GetConceptOptions;

@@ -172,6 +172,19 @@ describe('client.concepts.suggest', () => {
     expect(url).toContain('page_size=5');
     expect(url).toContain('vocabulary_ids=SNOMED');
   });
+
+  test('positional `query` wins over a `query` key inside options.query', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { data: [], meta: { pagination: mockPagination() } });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.concepts.suggest('diab', {
+      query: { query: 'override-attempt', trace: 'on' },
+    });
+    const { url } = lastCall(fetchMock);
+    expect(url).toContain('query=diab');
+    expect(url).not.toContain('query=override-attempt');
+    expect(url).toContain('trace=on');
+  });
 });
 
 describe('client.concepts.related', () => {

@@ -16,13 +16,14 @@ export class Domains {
    * while the vocabularies version returns domains scoped to vocabulary
    * usage.
    *
+   * Not paginated server-side (Python and R SDKs both call this endpoint
+   * without page/page_size). Returns the full catalog in a single call.
+   *
    * @see https://docs.omophub.com/api-reference/domains/list
    */
-  async list(
-    options: ListDomainsOptions & GetOptions = {},
-  ): Promise<OMOPHubResponse<Domain[] | PaginatedData<Domain>>> {
+  async list(options: ListDomainsOptions & GetOptions = {}): Promise<OMOPHubResponse<Domain[]>> {
     const { signal, headers, query, ...flags } = options;
-    return this.client.get<Domain[] | PaginatedData<Domain>>('/domains', {
+    return this.client.get<Domain[]>('/domains', {
       signal,
       headers,
       query: { ...flags, ...query },
