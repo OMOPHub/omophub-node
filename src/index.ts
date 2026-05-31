@@ -38,6 +38,7 @@ export type {
   RelatedConcept,
   RelatedConceptsOptions,
   RelatedConceptsResult,
+  RelationshipConcept,
   SuggestConceptsOptions,
   Synonym,
 } from './concepts/interfaces/index.js';

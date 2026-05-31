@@ -13,19 +13,30 @@ export interface MappingContext {
   scope?: string;
 }
 
+/**
+ * Single mapping row returned by `mappings.get` / `mappings.map`.
+ *
+ * Minimum live-API shape: `{ source_concept_id, source_concept_name,
+ * target_concept_id, target_concept_name, relationship_id }`. The
+ * remaining `source_*` / `target_*` metadata fields and `confidence`
+ * are populated when the server has them expanded (e.g. when
+ * `targetVocabulary` was supplied or the row carries a mapping score).
+ */
 export interface Mapping {
   source_concept_id: number;
   source_concept_name: string;
-  source_vocabulary_id: string;
-  source_concept_code: string;
+  source_vocabulary_id?: string;
+  source_concept_code?: string;
   target_concept_id: number;
   target_concept_name: string;
-  target_vocabulary_id: string;
-  target_concept_code: string;
+  target_vocabulary_id?: string;
+  target_concept_code?: string;
   target_domain_id?: string;
   target_concept_class_id?: string;
-  mapping_type: string;
-  relationship_id?: string;
+  relationship_id: string;
+  /** Server-side mapping-quality score in `[0, 1]`. */
+  confidence?: number;
+  mapping_type?: string;
   invalid_reason?: string | null;
   quality?: MappingQuality;
   context?: MappingContext;
