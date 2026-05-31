@@ -5,6 +5,7 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   test:
@@ -25,3 +26,22 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+
+  integration:
+    # Only run on push to main/develop, not on PRs (avoids leaking the
+    # live API key to forked-PR runners and keeps PR CI fast).
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - name: Run e2e tests against live API
+        env:
+          OMOPHUB_API_KEY: ${{ secrets.TEST_API_KEY }}
+        run: npm run test:e2e
