@@ -1,0 +1,91 @@
+package.json
+  h_70ae365dc0c3d1 3
+  s_b724aff89835a7::t_c33c7e61d1e8d4 61,63-64
+tsconfig.json
+  s_b724aff89835a7::t_5601fcc664be45 7
+src/mappings/interfaces/mapping.ts
+  s_b724aff89835a7::t_9aa6dbefacef3c 16-24,28-29,32-33,36-39
+examples/basic-usage.ts
+  s_b724aff89835a7::t_24890391b25601 1-49
+examples/map-between-vocabularies.ts
+  s_b724aff89835a7::t_e2daed4243430f 1-106,109-123
+  s_b724aff89835a7::t_0e47046da76b38 107-108
+tsconfig.examples.json
+  s_b724aff89835a7::t_07b38d2803f579 1-9
+examples/fhir-resolver.ts
+  s_b724aff89835a7::t_513598f76cef8e 88
+  s_b724aff89835a7::t_3167ee53d81bbc 71
+  s_b724aff89835a7::t_5d332cbdac7286 105
+  s_b724aff89835a7::t_e9909016956a47 162
+  s_b724aff89835a7::t_c7c4a023c6235e 179
+  s_b724aff89835a7::t_a4b4510d4913a2 204
+  s_b724aff89835a7::t_a9bc5affee6660 141
+  s_b724aff89835a7::t_4bffaa2692c237 220-222,224
+  s_b724aff89835a7::t_2e64e4625dfa39 49
+  s_b724aff89835a7::t_0b59e74825370d 233
+  s_b724aff89835a7::t_8c6520ff635e65 1-28,30-48,50-70,72-87,89-104,106-124,126-140,142-161,163-178,180-203,205-219,223,225-232,234-267,282-288
+  s_b724aff89835a7::t_2d2a8e5880f1e0 125
+  s_b724aff89835a7::t_584e2266a8acdf 268-281
+  s_b724aff89835a7::t_deedbc025b08d1 29
+README.md
+  s_b724aff89835a7::t_dc15d6dfa108a3 235-236
+  s_b724aff89835a7::t_1322b14fdd6fc5 325
+  s_b724aff89835a7::t_96d0ef024e5202 212,224
+  s_b724aff89835a7::t_4f7d512a13b2a0 1,3,5-31,35,38,40,45-46,48,51-69,74,76-116,119-135,139,142,144,149,152-153,155-160,162,167,169-171,175-178,182-188,190-191,194-196,198,200,204,206-211,213-216,219-223,225,228-230,233-234,237-246,249-251,255-258,260-263,266-270,273-285,288-290,293-301,304-306,309-313,315,318-324,326-330,333,335-344,346,348-356,359-360,362,369,374-393,395-397,401,411,415,420-422,427-440,445,447,449-468,470-496,501-504
+src/concepts/interfaces/concept.ts
+  s_b724aff89835a7::t_d96d53445ea3ca 23-36,40-45,48-49,52-56
+examples/README.md
+  s_b724aff89835a7::t_bbc00ab106f55b 1-76
+examples/navigate-hierarchy.ts
+  s_b724aff89835a7::t_5a948d90a8ade8 104-110
+  s_b724aff89835a7::t_010db6e8fb7c6f 11
+  s_b724aff89835a7::t_ad7a31efdf3e9c 47
+  s_b724aff89835a7::t_297989d3d824c8 1-10,12-28,30-46,48-72,76-83,85-103,111-116
+  s_b724aff89835a7::t_e0ec5de004a6ab 29
+  s_b724aff89835a7::t_f837029b718894 73-75
+  s_b724aff89835a7::t_84bf115ac62c25 84
+CONTRIBUTING.md
+  h_70ae365dc0c3d1 19,22,43,55,85,90,110,183,185-186,189,192,215
+  s_b724aff89835a7::t_33d7fb7adf2298 1-18,20-21,23-42,44-54,56-84,86-89,91-109,111-182,184,187-188,190-191,193-214,216-230
+examples/search-concepts.ts
+  s_b724aff89835a7::t_d5abc9d108e007 159
+  s_b724aff89835a7::t_474dbbe0d1509e 73
+  s_b724aff89835a7::t_4e667123fd4cce 1-12,14-24,26-39,41-72,74-99,101-110,112-124,126-143,145-158,160-187,200-205
+  s_b724aff89835a7::t_3f0775df2595b2 40
+  s_b724aff89835a7::t_f9aea70957e7ca 100
+  s_b724aff89835a7::t_0838a6eba46c7d 13,25
+  s_b724aff89835a7::t_fa35410c2c211e 111
+  s_b724aff89835a7::t_c9f9c4afc599f1 125
+  s_b724aff89835a7::t_d158cf01aed298 144
+  s_b724aff89835a7::t_0c9b3e5bde4878 188-199
+examples/error-handling.ts
+  s_b724aff89835a7::t_73e36e38288cc9 162
+  s_b724aff89835a7::t_5db65b72b20e1b 1-161,163-179
+src/fhir/interfaces/fhir.ts
+  s_b724aff89835a7::t_41d8e7d9b89425 77-84
+CHANGELOG.md
+  h_70ae365dc0c3d1 5,16,31,33-40,42-44,47,50-51,53-58,64
+src/fhir/fhir.ts
+  s_b724aff89835a7::t_95c1cfe986ebd3 47-50,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8f80afe3fdda0dbabae64ed8fd747708a16d7d04",
+  "prompts": {},
+  "humans": {
+    "h_70ae365dc0c3d1": {
+      "author": "alex-omophub <sdk@omophub.com>"
+    }
+  },
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
