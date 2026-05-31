@@ -1,0 +1,35 @@
+test/common/utils/to-snake-case.test.ts
+  s_b724aff89835a7::t_1e5abffc8134ac 88-99
+src/common/utils/backoff.ts
+  s_b724aff89835a7::t_e3bf1e82d03afd 37-45,48-56
+src/common/utils/to-snake-case.ts
+  s_b724aff89835a7::t_ff1ea31b798b20 32-36
+test/common/utils/backoff.test.ts
+  s_b724aff89835a7::t_d843a24dcb7ee0 68-89
+test/auth/auth.test.ts
+  s_b724aff89835a7::t_f158ddb7f29559 50-57
+test/common/utils/paginate.test.ts
+  s_b724aff89835a7::t_61413215d085ae 122-166
+src/auth/auth.ts
+  s_b724aff89835a7::t_74a55e397d458c 30-34,40
+src/common/utils/paginate.ts
+  s_b724aff89835a7::t_106a3d6ea968c8 58
+  s_b724aff89835a7::t_c9df98dbc249c5 104-112
+  s_b724aff89835a7::t_ead59ea83ef37a 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bf1419dae3d2ac9cda7670ee7a2481185aa2a127",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
