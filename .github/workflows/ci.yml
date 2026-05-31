@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22, 24]
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+  integration:
+    # Only run on push or manual dispatch *and* only on main/develop.
+    # The branch check is load-bearing for `workflow_dispatch`: the
+    # Actions UI lets you pick any ref, so without it a collaborator
+    # could push a modified workflow to a feature branch and fire it
+    # with `TEST_API_KEY` attached, bypassing PR review. `push` events
+    # are already gated by `on.push.branches`, but checking github.ref
+    # here keeps both event types under one rule.
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - name: Run e2e tests against live API
+        env:
+          OMOPHUB_API_KEY: ${{ secrets.TEST_API_KEY }}
+        run: npm run test:e2e
