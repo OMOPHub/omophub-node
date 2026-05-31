@@ -4,7 +4,7 @@ import type { PatchOptions } from './common/interfaces/patch-options.js';
 import type { HeadersInit, PerCallOptions } from './common/interfaces/per-call-options.js';
 import type { PostOptions } from './common/interfaces/post-options.js';
 import type { PutOptions } from './common/interfaces/put-options.js';
-import { backoffMs, isRetryableStatus } from './common/utils/backoff.js';
+import { backoffMs, isNoSideEffectStatus, isRetryableStatus } from './common/utils/backoff.js';
 import { appendQuery, buildQuery } from './common/utils/build-query.js';
 import { envOrUndefined } from './common/utils/env.js';
 import { mergeHeaders } from './common/utils/merge-headers.js';
@@ -197,7 +197,7 @@ export class OMOPHub {
         if (
           isRetryableStatus(response.status) &&
           attempt < this.maxRetries &&
-          isRetryableRequest(method, headers)
+          (isNoSideEffectStatus(response.status) || isRetryableRequest(method, headers))
         ) {
           const retryAfter = response.headers.get('retry-after');
           // Drain the body so undici releases the connection back to the pool
@@ -263,7 +263,9 @@ const IDEMPOTENT_METHODS = new Set(['GET', 'HEAD', 'OPTIONS', 'PUT', 'DELETE']);
  * A request is safe to retry when its HTTP verb is idempotent (RFC 7231)
  * or when the caller has supplied an `Idempotency-Key` header — at which
  * point the server can deduplicate on its side. POST and PATCH without a
- * key are NOT retried, since retry could create duplicates.
+ * key are NOT retried by this gate, since retry could create duplicates.
+ * (`isNoSideEffectStatus` bypasses this for statuses like 429 where the
+ * server explicitly rejected without processing.)
  */
 function isRetryableRequest(method: string, headers: Headers): boolean {
   if (IDEMPOTENT_METHODS.has(method)) return true;

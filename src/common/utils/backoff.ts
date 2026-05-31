@@ -10,6 +10,20 @@ export function isRetryableStatus(status: number): boolean {
 }
 
 /**
+ * Statuses where the server is guaranteed not to have touched state
+ * before rejecting (RFC 9110 §15.5.29: 429 means the request was
+ * declined, not processed). Safe to retry regardless of HTTP method,
+ * since there's nothing to deduplicate. Distinct from 5xx, where the
+ * upstream may have partially processed the request before failing —
+ * those still gate on `Idempotency-Key` to avoid duplicate side effects.
+ */
+const NO_SIDE_EFFECT_STATUSES = new Set([429]);
+
+export function isNoSideEffectStatus(status: number): boolean {
+  return NO_SIDE_EFFECT_STATUSES.has(status);
+}
+
+/**
  * Computes the delay before the next retry attempt.
  *
  * - Honours `Retry-After` header (seconds or HTTP-date) — clamped to

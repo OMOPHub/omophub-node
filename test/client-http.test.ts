@@ -171,6 +171,25 @@ describe('OMOPHub HTTP dispatch', () => {
     expect(headers).toBeNull();
   });
 
+  test('DOES retry POST without an Idempotency-Key on 429 (pre-processing rejection)', async () => {
+    // 429 means the server declined before touching state (RFC 9110
+    // §15.5.29), so retry can't create duplicates — distinct from 5xx
+    // where the upstream may have partially processed. The FHIR e2e
+    // suite is the canonical case: every `fhir.*` endpoint is POST.
+    const fetchMock = createMockFetch();
+    enqueueError(fetchMock, 429, mockApiErrorBody('rate_limit_exceeded', 'slow'), {
+      'retry-after': '0',
+    });
+    enqueueSuccess(fetchMock, { ok: true });
+
+    const client = new OMOPHub('oh_test', { fetch: fetchMock, maxRetries: 3 });
+    const { data, error } = await client.post('/concepts/batch', { concept_ids: [1] });
+
+    expect(error).toBeNull();
+    expect(data).toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   test('does NOT retry POST without an Idempotency-Key on 503', async () => {
     const fetchMock = createMockFetch();
     enqueueError(fetchMock, 503);
