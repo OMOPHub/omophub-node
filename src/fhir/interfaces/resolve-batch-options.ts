@@ -1,8 +1,8 @@
-export interface ResolveBatchOptions {
-  resourceType?: string;
-  includeRecommendations?: boolean;
-  /** Max recommendations per coding (1–20). Default 5 at the API. */
-  recommendationsLimit?: number;
-  includeQuality?: boolean;
-  onUnmapped?: 'error' | 'sentinel';
-}
+import type { ResolveCommonOptions } from './resolve-common-options.js';
+
+/**
+ * Options for `fhir.resolveBatch(codings, options)`. All fields are
+ * inherited from `ResolveCommonOptions` — `recommendationsLimit` is
+ * applied **per coding** in the batch.
+ */
+export type ResolveBatchOptions = ResolveCommonOptions;

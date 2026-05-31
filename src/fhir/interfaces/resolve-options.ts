@@ -1,4 +1,5 @@
 import type { Coding } from './fhir.js';
+import type { ResolveCommonOptions } from './resolve-common-options.js';
 
 /**
  * Options for `fhir.resolve()`. Accepts either flat fields
@@ -7,8 +8,13 @@ import type { Coding } from './fhir.js';
  * precedence when both are supplied.
  *
  * At minimum, `code` (or `coding.code`) is required.
+ *
+ * Common knobs (`resourceType`, `includeRecommendations`,
+ * `recommendationsLimit`, `includeQuality`, `onUnmapped`) are inherited
+ * from `ResolveCommonOptions` and shared with `resolveBatch` /
+ * `resolveCodeableConcept`.
  */
-export interface ResolveOptions {
+export interface ResolveOptions extends ResolveCommonOptions {
   // Flat-form fields
   system?: string;
   code?: string;
@@ -17,18 +23,4 @@ export interface ResolveOptions {
 
   // Nested-form
   coding?: Coding;
-
-  // Common
-  /** FHIR resource type for context-aware mapping (e.g. `'Condition'`, `'Observation'`). */
-  resourceType?: string;
-  /** Include Phoebe-style recommendations alongside the resolution. */
-  includeRecommendations?: boolean;
-  /** Max recommendations (1–20). Default 5 at the API. */
-  recommendationsLimit?: number;
-  includeQuality?: boolean;
-  /**
-   * `'error'` (default) returns a 404 for unmapped codings; `'sentinel'`
-   * returns a `concept_id: 0` row so batch flows can keep going.
-   */
-  onUnmapped?: 'error' | 'sentinel';
 }

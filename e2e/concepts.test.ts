@@ -113,7 +113,7 @@ describe('e2e: client.concepts.getByCode', () => {
         includeRelationships: true,
       });
       if (error) {
-        expect(['timeout_error', 'connection_error']).toContain(error.name);
+        expect(['timeout_error', 'connection_error', 'rate_limit_exceeded']).toContain(error.name);
         return;
       }
       expect(data?.relationships).toBeTruthy();
@@ -200,7 +200,7 @@ describe('e2e: client.concepts.suggest', () => {
       vocabularyIds: ['SNOMED'],
     });
     if (error) {
-      expect(['timeout_error', 'connection_error']).toContain(error.name);
+      expect(['timeout_error', 'connection_error', 'rate_limit_exceeded']).toContain(error.name);
       return;
     }
     expect(data).toBeTruthy();

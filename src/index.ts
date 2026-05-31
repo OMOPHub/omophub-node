@@ -61,6 +61,7 @@ export type {
   RecommendedConceptOutput,
   ResolveBatchOptions,
   ResolveCodeableConceptOptions,
+  ResolveCommonOptions,
   ResolvedConcept,
   ResolveOptions,
 } from './fhir/interfaces/index.js';

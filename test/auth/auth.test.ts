@@ -46,4 +46,38 @@ describe('auth helpers', () => {
     // env stays unset, no silent write
     expect(process.env.OMOPHUB_API_KEY).toBeUndefined();
   });
+
+  test('setApiKey re-throws read-only env errors as OMOPHubError', async () => {
+    const { OMOPHubError } = await import('../../src/errors.js');
+    // Node's `process.env` is a Proxy that rejects accessor descriptors,
+    // so we wrap it in our own Proxy whose `set` trap throws — simulating
+    // a frozen / read-only env in an edge runtime — and swap it in
+    // temporarily.
+    const realEnv = process.env;
+    const readOnlyEnv = new Proxy(
+      {},
+      {
+        get() {
+          return undefined;
+        },
+        set() {
+          throw new TypeError('process.env is read-only here');
+        },
+      },
+    ) as NodeJS.ProcessEnv;
+    Object.defineProperty(process, 'env', {
+      configurable: true,
+      get: () => readOnlyEnv,
+    });
+    try {
+      expect(() => setApiKey('oh_test_value')).toThrowError(OMOPHubError);
+      expect(() => setApiKey('oh_test_value')).toThrowError(/could not write to process.env/);
+    } finally {
+      Object.defineProperty(process, 'env', {
+        configurable: true,
+        writable: true,
+        value: realEnv,
+      });
+    }
+  });
 });

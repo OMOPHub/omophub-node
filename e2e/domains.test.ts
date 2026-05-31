@@ -35,7 +35,7 @@ describe('e2e: client.domains.concepts', () => {
       standardOnly: true,
     });
     if (error) {
-      expect(['timeout_error', 'connection_error']).toContain(error.name);
+      expect(['timeout_error', 'connection_error', 'rate_limit_exceeded']).toContain(error.name);
       return;
     }
     expect(Array.isArray(data?.concepts)).toBe(true);

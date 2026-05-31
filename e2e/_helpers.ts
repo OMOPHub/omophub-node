@@ -55,13 +55,30 @@ export function e2eClientNoRetry(): OMOPHub {
  * Brief per-suite throttle to avoid hot-spotting the API rate limiter
  * when the full e2e suite runs back-to-back. ~2 req/sec global ceiling.
  *
- * The default 200ms was too aggressive — running ~120 sequential tests
- * triggered server-side rate limits even though each test made only one
- * call. 500ms keeps the suite under any reasonable per-minute quota.
+ * Two implementation notes:
+ *
+ * 1. **Cross-file state via `globalThis`** — vitest loads each test file
+ *    in its own module context, so a plain `let lastRequestAt = 0` would
+ *    reset at every file boundary, letting the first call in each of the
+ *    11 e2e files fire with zero delay. We pin the timestamp on
+ *    `globalThis` (a single shared object across module contexts) so the
+ *    throttle is genuinely suite-wide.
+ *
+ * 2. **Reservation pattern** — each call advances `nextAllowedAt` to its
+ *    target time *before* awaiting, so even concurrent calls (which the
+ *    suite avoids today via `fileParallelism: false`, but might allow in
+ *    the future) get queued slots ~500 ms apart rather than racing on a
+ *    single shared timestamp.
  */
-let lastRequestAt = 0;
+const THROTTLE_MS = 500;
+const THROTTLE_KEY = Symbol.for('omophub-node:e2e:softThrottle:nextAllowedAt');
+type ThrottleHost = { [THROTTLE_KEY]?: number };
+
 export async function softThrottle(): Promise<void> {
-  const elapsed = Date.now() - lastRequestAt;
-  if (elapsed < 500) await new Promise((r) => setTimeout(r, 500 - elapsed));
-  lastRequestAt = Date.now();
+  const host = globalThis as ThrottleHost;
+  const now = Date.now();
+  const targetTime = Math.max(now, (host[THROTTLE_KEY] ?? 0) + THROTTLE_MS);
+  host[THROTTLE_KEY] = targetTime;
+  const wait = targetTime - now;
+  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
 }

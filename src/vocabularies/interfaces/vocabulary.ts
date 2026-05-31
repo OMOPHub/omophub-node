@@ -8,6 +8,10 @@ export interface Vocabulary {
   vocabulary_concept_id?: number;
   vocabulary_reference?: string;
   vocabulary_version?: string;
+  /** ISO timestamp the vocabulary row was added to the deployment. */
+  created_at?: string;
+  /** ISO timestamp the vocabulary row was last refreshed. */
+  updated_at?: string;
 }
 
 export interface VocabularyStats {
@@ -52,12 +56,12 @@ export interface ConceptClass {
  * `vocabularies` (NOT a bare array, NOT a generic `data` envelope).
  * Pagination metadata lives on the outer `Response.meta.pagination`.
  *
- * Items are typed as `VocabularySummary` (= `Vocabulary` + optional `stats`)
- * so callers passing `includeStats: true` can access the populated `stats`
- * field without casting. `stats` is undefined when `includeStats` is false.
+ * The `includeStats` query flag does NOT embed per-item stats here —
+ * the live API ignores it for the list endpoint. Use
+ * `client.vocabularies.stats(vocabularyId)` to fetch stats per vocabulary.
  */
 export interface ListVocabulariesResult {
-  vocabularies: VocabularySummary[];
+  vocabularies: Vocabulary[];
 }
 
 /**

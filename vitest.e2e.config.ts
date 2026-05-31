@@ -3,14 +3,37 @@ import { defineConfig } from 'vitest/config';
 
 // Minimal .env loader — just enough to pick up OMOPHUB_API_KEY for the
 // e2e suite. Keeping a runtime dotenv dependency out of the package.
+//
+// Supported syntax (subset of dotenv):
+// - KEY=value
+// - KEY="value with spaces or # hash"   (quoted: # is literal)
+// - KEY='value'
+// - KEY=value # inline comment           (unquoted: trailing # stripped)
+// - export KEY=value                     (export prefix allowed)
+// - # full-line comments                 (ignored)
 try {
   const env = readFileSync(new URL('.env', import.meta.url), 'utf8');
-  for (const line of env.split('\n')) {
-    const match = line.match(/^\s*(?:export\s+)?([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/);
+  for (const rawLine of env.split('\n')) {
+    const line = rawLine.trimStart();
+    if (line === '' || line.startsWith('#')) continue;
+    const match = line.match(/^(?:export\s+)?([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/);
     if (!match) continue;
-    const [, key, rawValue] = match;
+    const [, key, rest] = match;
     if (!key) continue;
-    const value = (rawValue ?? '').replace(/^['"](.*)['"]$/, '$1');
+    let value = (rest ?? '').trimEnd();
+    // Quoted values: take the content between matching quotes literally
+    // (a `#` inside quotes is part of the value, not a comment).
+    const quoted = value.match(/^(['"])((?:\\.|(?!\1).)*)\1\s*(?:#.*)?$/);
+    if (quoted) {
+      value = quoted[2] ?? '';
+    } else {
+      // Unquoted: strip a trailing inline comment introduced by ` #`
+      // (whitespace + hash). A `#` with no preceding whitespace is
+      // treated as part of the value (matches dotenv conventions).
+      const commentIdx = value.search(/\s+#/);
+      if (commentIdx !== -1) value = value.slice(0, commentIdx);
+      value = value.trim();
+    }
     if (process.env[key] === undefined) {
       process.env[key] = value;
     }
