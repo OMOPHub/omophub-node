@@ -29,7 +29,11 @@ export function toSnakeCaseKeys<T>(input: T): T {
     return input.map((item) => toSnakeCaseKeys(item)) as unknown as T;
   }
   if (isPlainObject(input)) {
-    const out: Record<string, unknown> = {};
+    // Null-prototype accumulator: prevents `__proto__` (and `constructor`,
+    // `prototype`) keys in the source from mutating the result's prototype.
+    // Plain `{}` would trigger Object.prototype's `__proto__` setter on
+    // bracket assignment.
+    const out: Record<string, unknown> = Object.create(null);
     for (const [k, v] of Object.entries(input)) {
       out[camelToSnakeCase(k)] = toSnakeCaseKeys(v);
     }

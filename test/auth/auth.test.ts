@@ -47,6 +47,14 @@ describe('auth helpers', () => {
     expect(process.env.OMOPHUB_API_KEY).toBeUndefined();
   });
 
+  test('setApiKey strips surrounding whitespace before persisting', () => {
+    // A leading newline or trailing space slipped from a `.env` parser or
+    // copy-paste must not leak into the Authorization header.
+    setApiKey('  oh_padded_value\n');
+    expect(process.env.OMOPHUB_API_KEY).toBe('oh_padded_value');
+    expect(getApiKey()).toBe('oh_padded_value');
+  });
+
   test('setApiKey re-throws read-only env errors as OMOPHubError', async () => {
     const { OMOPHubError } = await import('../../src/errors.js');
     // Node's `process.env` is a Proxy that rejects accessor descriptors,

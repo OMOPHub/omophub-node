@@ -55,7 +55,7 @@ export async function* paginate<T>(
     for (const item of items) yield item;
     pagesYielded++;
 
-    if (!hasNextPage(response.data)) return;
+    if (!hasNextPage(response)) return;
     page++;
   }
 }
@@ -87,7 +87,7 @@ export async function paginateAll<T>(
     }
     const items = extractItems(response.data);
     collected.push(...items);
-    if (items.length === 0 || !hasNextPage(response.data)) {
+    if (items.length === 0 || !hasNextPage(response)) {
       return { data: collected, errors, pagesFetched };
     }
     page++;
@@ -101,7 +101,15 @@ function extractItems<T>(data: PaginatedData<T> | T[] | null): T[] {
   return data.data;
 }
 
-function hasNextPage<T>(data: PaginatedData<T> | T[] | null): boolean {
+function hasNextPage<T>(response: OMOPHubResponse<PaginatedData<T> | T[]>): boolean {
+  // Canonical location per SDK convention — `meta.pagination` always lives
+  // on the outer envelope. Resource methods that pre-wrap their data into
+  // a `PaginatedData` shape are handled by the fallback below.
+  const outerHasNext = response.meta?.pagination?.has_next;
+  if (outerHasNext === true) return true;
+  if (outerHasNext === false) return false;
+  // Fallback: data-internal pagination (legacy / pre-wrapped callers).
+  const data = response.data;
   if (!data || Array.isArray(data)) return false;
   return data.meta.pagination.has_next === true;
 }

@@ -34,14 +34,26 @@ export function backoffMs(attempt: number, retryAfter: string | null): number {
  * Parses a `Retry-After` header value (delta-seconds or HTTP-date) into
  * a number of seconds. Returns `null` for unparseable input. Exported so
  * `parse-error.ts` can populate `ErrorResponse.retryAfter` consistently.
+ *
+ * Strict per RFC 9110 §10.2.3:
+ * - `delta-seconds` is `1*DIGIT` — no signs, decimals, exponents, or
+ *   whitespace. `Number('')` quietly returns 0; `Number('1.5')` returns
+ *   1.5; both would otherwise be honoured as retry delays. We reject both.
+ * - `HTTP-date` is `IMF-fixdate`, `rfc850-date`, or `asctime-date`. All
+ *   three start with a 3-letter weekday prefix; `Date.parse` accepts
+ *   much more (e.g. `'1 hour ago'`, `'2024-01-01'`), so we gate the call
+ *   behind a prefix check.
  */
 export function parseRetryAfter(header: string): number | null {
-  const seconds = Number(header);
-  if (Number.isFinite(seconds) && seconds >= 0) return seconds;
-  const date = Date.parse(header);
-  if (Number.isFinite(date)) {
-    const diffMs = date - Date.now();
-    return diffMs > 0 ? Math.ceil(diffMs / 1000) : 0;
+  if (/^\d+$/.test(header)) {
+    return Number(header);
+  }
+  if (/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.test(header)) {
+    const date = Date.parse(header);
+    if (Number.isFinite(date)) {
+      const diffMs = date - Date.now();
+      return diffMs > 0 ? Math.ceil(diffMs / 1000) : 0;
+    }
   }
   return null;
 }

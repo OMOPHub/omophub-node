@@ -27,12 +27,17 @@ export function setApiKey(key: string): void {
   if (typeof key !== 'string' || key.trim().length === 0) {
     throw new OMOPHubError('setApiKey requires a non-empty key string.');
   }
+  // Trim surrounding whitespace before persisting. We validated with
+  // `.trim()` above; storing the raw value would leak the whitespace into
+  // every outbound request's Authorization header and the server would
+  // reject the key as invalid.
+  const trimmed = key.trim();
   // Direct env assignment can throw `TypeError` in runtimes where
   // process.env is frozen / sealed / read-only-proxied (some edge
   // runtimes, restricted Bun modes, etc.). Convert to `OMOPHubError` so
   // callers can rely on the documented exception type.
   try {
-    process.env[ENV_VAR] = key;
+    process.env[ENV_VAR] = trimmed;
   } catch (err) {
     throw new OMOPHubError(
       `setApiKey could not write to process.env: ${err instanceof Error ? err.message : String(err)}`,

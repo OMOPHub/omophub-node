@@ -65,4 +65,26 @@ describe('backoffMs', () => {
     expect(result).toBeGreaterThanOrEqual(4_000);
     expect(result).toBeLessThanOrEqual(6_000);
   });
+
+  test('rejects malformed delta-seconds (whitespace, decimals, signs, empty)', () => {
+    // Each falls back to exponential — the canonical "value not parseable"
+    // signal. Without strict parsing, `Number('')` would silently return 0
+    // and we'd retry instantly with no backoff.
+    expect(backoffMs(0, '')).toBe(500);
+    expect(backoffMs(0, '  5  ')).toBe(500);
+    expect(backoffMs(0, '1.5')).toBe(500);
+    expect(backoffMs(0, '+5')).toBe(500);
+    expect(backoffMs(0, '5e3')).toBe(500);
+    expect(backoffMs(0, '-5')).toBe(500);
+  });
+
+  test('rejects non-HTTP-date strings that Date.parse would otherwise accept', () => {
+    // `Date.parse('2024-01-01')` succeeds but ISO dates are not valid
+    // Retry-After values per RFC 9110 (which requires IMF-fixdate /
+    // rfc850-date / asctime-date). Same for various permissive inputs.
+    expect(backoffMs(0, '2024-01-01')).toBe(500);
+    expect(backoffMs(0, '2024-01-01T00:00:00Z')).toBe(500);
+    expect(backoffMs(0, 'tomorrow')).toBe(500);
+    expect(backoffMs(0, '1 hour')).toBe(500);
+  });
 });

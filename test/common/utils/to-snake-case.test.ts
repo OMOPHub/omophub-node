@@ -85,4 +85,16 @@ describe('toSnakeCaseKeys', () => {
     expect(out.source_coding).toBe(c);
     expect(out.source_coding).toBeInstanceOf(Coding);
   });
+
+  test('does not let a `__proto__` key mutate the result prototype', () => {
+    // `JSON.parse` produces an own `__proto__` property (vs. an object
+    // literal, which would set [[Prototype]]). A naive `out['__proto__'] = v`
+    // would invoke Object.prototype's setter and replace the result's
+    // prototype with `v`.
+    const malicious = JSON.parse('{"__proto__":{"polluted":true}}');
+    const out = toSnakeCaseKeys(malicious) as Record<string, unknown>;
+    expect((out as { polluted?: unknown }).polluted).toBeUndefined();
+    // Object.prototype must remain unaffected globally either way.
+    expect(({} as { polluted?: unknown }).polluted).toBeUndefined();
+  });
 });

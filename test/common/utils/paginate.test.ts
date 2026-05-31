@@ -119,3 +119,48 @@ describe('paginateAll (eager collect)', () => {
     expect(result.pagesFetched).toBe(2);
   });
 });
+
+describe('hasNextPage — outer envelope pagination', () => {
+  // Some endpoints return a bare `T[]` as `response.data` and carry
+  // pagination on the outer `response.meta.pagination` (the canonical
+  // location per SDK convention). The pagination helper must honour that
+  // — earlier behaviour hard-coded arrays as non-paginated.
+  function bareArrayPage<T>(items: T[], hasNext: boolean, page = 1, pageSize = 100) {
+    return Promise.resolve({
+      data: items,
+      error: null,
+      meta: {
+        pagination: {
+          page,
+          page_size: pageSize,
+          total_items: hasNext ? page * pageSize + 1 : items.length,
+          total_pages: hasNext ? page + 1 : page,
+          has_next: hasNext,
+          has_previous: page > 1,
+        },
+      },
+      headers: {},
+    } as unknown as OMOPHubResponse<T[]>);
+  }
+
+  test('paginate walks pages when data is bare array + outer meta says has_next', async () => {
+    const fetchPage = vi
+      .fn()
+      .mockImplementationOnce((_p, s) => bareArrayPage([1, 2], true, 1, s))
+      .mockImplementationOnce((_p, s) => bareArrayPage([3, 4], false, 2, s));
+    const collected: number[] = [];
+    for await (const n of paginate<number>(fetchPage, { pageSize: 2 })) collected.push(n);
+    expect(collected).toEqual([1, 2, 3, 4]);
+    expect(fetchPage).toHaveBeenCalledTimes(2);
+  });
+
+  test('paginateAll walks pages when data is bare array + outer meta says has_next', async () => {
+    const fetchPage = vi
+      .fn()
+      .mockImplementationOnce((_p, s) => bareArrayPage(['a', 'b'], true, 1, s))
+      .mockImplementationOnce((_p, s) => bareArrayPage(['c'], false, 2, s));
+    const result = await paginateAll<string>(fetchPage, { pageSize: 2 });
+    expect(result.data).toEqual(['a', 'b', 'c']);
+    expect(result.pagesFetched).toBe(2);
+  });
+});
