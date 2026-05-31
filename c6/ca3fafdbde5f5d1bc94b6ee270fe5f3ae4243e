@@ -1,0 +1,22 @@
+test/common/utils/backoff.test.ts
+  s_b724aff89835a7::t_0ddfd20ccbe038 90-131
+src/common/utils/backoff.ts
+  s_b724aff89835a7::t_7e129638169f03 33-36,38,40,42,48,51-53
+  s_b724aff89835a7::t_5a6d79990a21ed 37,39,41,54-58,64-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c6ca3fafdbde5f5d1bc94b6ee270fe5f3ae4243e",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
