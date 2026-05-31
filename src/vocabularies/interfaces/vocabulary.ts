@@ -46,3 +46,32 @@ export interface ConceptClass {
   concept_class_name: string;
   concept_class_concept_id?: number;
 }
+
+/**
+ * `GET /vocabularies` returns a named-wrapper object with the array under
+ * `vocabularies` (NOT a bare array, NOT a generic `data` envelope).
+ * Pagination metadata lives on the outer `Response.meta.pagination`.
+ *
+ * Items are typed as `VocabularySummary` (= `Vocabulary` + optional `stats`)
+ * so callers passing `includeStats: true` can access the populated `stats`
+ * field without casting. `stats` is undefined when `includeStats` is false.
+ */
+export interface ListVocabulariesResult {
+  vocabularies: VocabularySummary[];
+}
+
+/**
+ * `GET /vocabularies/{id}/concepts` returns a **bare array** of full
+ * `Concept` rows. Pagination metadata lives on the outer `Response.meta`.
+ */
+export type VocabularyConceptsResult = import('../../concepts/interfaces/concept.js').Concept[];
+
+export interface ListVocabularyDomainsResult {
+  domains: VocabularyDomain[];
+}
+
+/**
+ * `GET /vocabularies/concept-classes` returns a **bare array** of
+ * concept-class rows.
+ */
+export type ListConceptClassesResult = ConceptClass[];

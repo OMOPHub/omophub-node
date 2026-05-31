@@ -36,12 +36,12 @@ export interface BulkBasicResultItem {
   duration?: number;
 }
 
-export interface BulkBasicSearchResponse {
-  results: BulkBasicResultItem[];
-  total_searches: number;
-  completed_searches: number;
-  failed_searches: number;
-}
+/**
+ * `POST /search/bulk` returns a **bare array** of per-search result
+ * items, NOT a summary wrapper. Use `data.length` for the count and
+ * `data.filter(r => r.status === 'completed').length` for completed.
+ */
+export type BulkBasicSearchResponse = BulkBasicResultItem[];
 
 export interface BulkSemanticResultItem {
   search_id: string;
@@ -52,12 +52,14 @@ export interface BulkSemanticResultItem {
   duration?: number;
 }
 
+/**
+ * `POST /search/semantic-bulk` returns a wrapper object — unlike
+ * `bulkBasic` which is a bare array. The semantic endpoint adds aggregate
+ * counts and a total duration to the response.
+ */
 export interface BulkSemanticSearchResponse {
   results: BulkSemanticResultItem[];
   total_searches: number;
-  /** Note the naming difference vs `BulkBasicSearchResponse.completed_searches`
-   *  — the server uses `completed_count`/`failed_count` for the semantic
-   *  endpoint. Surfaced as-is to match the wire. */
   completed_count: number;
   failed_count: number;
   total_duration?: number;

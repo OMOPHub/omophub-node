@@ -8,7 +8,7 @@ import {
 import { type PaginateAllResult, paginate, paginateAll } from '../common/utils/paginate.js';
 import { syntheticError } from '../common/utils/synthetic-error.js';
 import { toSnakeCaseKeys } from '../common/utils/to-snake-case.js';
-import type { Concept, ConceptSuggestion } from '../concepts/interfaces/concept.js';
+import type { Concept } from '../concepts/interfaces/concept.js';
 import type { Response as OMOPHubResponse } from '../interfaces.js';
 import type { AdvancedSearchOptions } from './interfaces/advanced-search-options.js';
 import type { AutocompleteOptions } from './interfaces/autocomplete-options.js';
@@ -22,7 +22,7 @@ import type {
 } from './interfaces/bulk-search.js';
 import type { BulkSemanticOptions } from './interfaces/bulk-semantic-options.js';
 import type { PaginateOptions } from './interfaces/paginate-options.js';
-import type { SearchResult } from './interfaces/search-result.js';
+import type { AutocompleteResult, SearchResult } from './interfaces/search-result.js';
 import type { SemanticSearchOptions } from './interfaces/semantic-search-options.js';
 import type {
   SemanticSearchResult,
@@ -150,14 +150,16 @@ export class Search {
   // ─── Autocomplete ──────────────────────────────────────────────────
 
   /**
-   * Lightweight typeahead suggestions.
+   * Lightweight typeahead suggestions. The server returns
+   * `{ query, suggestions: [{ suggestion: Concept, match_score?, match_type? }] }`
+   * — `query` echoes the input, `suggestions` is the array.
    */
   async autocomplete(
     query: string,
     options: AutocompleteOptions & GetOptions = {},
-  ): Promise<OMOPHubResponse<ConceptSuggestion[]>> {
+  ): Promise<OMOPHubResponse<AutocompleteResult>> {
     const { signal, headers, query: extraQuery, ...flags } = options;
-    return this.client.get<ConceptSuggestion[]>('/search/suggest', {
+    return this.client.get<AutocompleteResult>('/search/suggest', {
       signal,
       headers,
       query: { ...flags, ...extraQuery, query },

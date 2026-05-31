@@ -20,11 +20,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "biome check src/ test/",
-    "lint:fix": "biome check --write src/ test/",
-    "typecheck": "tsc --noEmit",
-    "format": "biome format --write src/ test/",
-    "format:check": "biome format --check src/ test/",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "lint": "biome check src/ test/ e2e/",
+    "lint:fix": "biome check --write src/ test/ e2e/",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.e2e.json",
+    "format": "biome format --write src/ test/ e2e/",
+    "format:check": "biome format --check src/ test/ e2e/",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

@@ -20,3 +20,19 @@ export interface Domain extends DomainSummary {
   category?: string;
   description?: string;
 }
+
+/**
+ * `GET /domains` returns the catalog wrapped under `domains` (not a bare
+ * array). The endpoint is not paginated server-side.
+ */
+export interface ListDomainsResult {
+  domains: Domain[];
+}
+
+/**
+ * `GET /domains/{id}/concepts` — concepts wrapped under `concepts`,
+ * pagination on outer `Response.meta`.
+ */
+export interface DomainConceptsResult {
+  concepts: import('../../concepts/interfaces/concept.js').ConceptSummary[];
+}

@@ -33,3 +33,22 @@ export interface SearchResult {
   facets?: SearchFacets;
   search_metadata?: SearchMetadata;
 }
+
+/**
+ * One entry in `AutocompleteResult.suggestions`. The server nests the
+ * concept under a `suggestion` field and may add scoring fields alongside.
+ */
+export interface AutocompleteEntry {
+  suggestion: Concept;
+  match_score?: number;
+  match_type?: string;
+}
+
+/**
+ * `GET /search/suggest` returns `{ query, suggestions: [...] }` — the
+ * caller's original query is echoed back. Wrapped, not a bare array.
+ */
+export interface AutocompleteResult {
+  query: string;
+  suggestions: AutocompleteEntry[];
+}
