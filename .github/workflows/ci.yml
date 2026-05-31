@@ -28,9 +28,16 @@ jobs:
       - run: npm test
 
   integration:
-    # Only run on push to main/develop, not on PRs (avoids leaking the
-    # live API key to forked-PR runners and keeps PR CI fast).
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    # Only run on push or manual dispatch *and* only on main/develop.
+    # The branch check is load-bearing for `workflow_dispatch`: the
+    # Actions UI lets you pick any ref, so without it a collaborator
+    # could push a modified workflow to a feature branch and fire it
+    # with `TEST_API_KEY` attached, bypassing PR review. `push` events
+    # are already gated by `on.push.branches`, but checking github.ref
+    # here keeps both event types under one rule.
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
