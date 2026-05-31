@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+### Fixed
+
+- Corrected `sortBy` enum values across three options interfaces to match what the API actually accepts. TypeScript users were previously offered values that the server rejects with `validation_error`:
+  - `ListVocabulariesOptions.sortBy`: was `'name' | 'concept_count' | 'last_updated'`, now `'name' | 'priority' | 'updated'`.
+  - `VocabularyConceptsOptions.sortBy`: was `'name' | 'concept_count' | 'last_updated'`, now `'name' | 'concept_id' | 'concept_code'`.
+  - `BasicSearchOptions.sortBy`: was `'relevance' | 'name' | 'concept_count' | 'last_updated'`, now `'relevance' | 'name' | 'code' | 'date'`.
+
 ## [1.0.0] - 2026-05-31
 
 ### Added

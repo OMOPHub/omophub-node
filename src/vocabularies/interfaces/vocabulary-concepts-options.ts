@@ -8,6 +8,6 @@ export interface VocabularyConceptsOptions extends PaginationOptions {
   includeInvalid?: boolean;
   includeRelationships?: boolean;
   includeSynonyms?: boolean;
-  sortBy?: 'name' | 'concept_count' | 'last_updated';
+  sortBy?: 'name' | 'concept_id' | 'concept_code';
   sortOrder?: 'asc' | 'desc';
 }
