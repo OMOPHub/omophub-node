@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.0.0
+## [Unreleased]
+
+## [1.0.0] - 2026-05-31
 
 ### Added
 
@@ -61,5 +63,7 @@ client.fhir          - resolve, resolveBatch, resolveCodeableConcept            
 Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
-<!-- No compare link yet - first tag will be created on the v1.0.0 release. -->
+<!-- Reference-style version links. Update when the v1.0.0 tag is cut. -->
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.0
 

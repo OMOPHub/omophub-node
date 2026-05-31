@@ -61,8 +61,9 @@ async function bulkLexicalSearch(client: OMOPHub): Promise<void> {
     ],
     { defaults: { vocabulary_ids: ['SNOMED', 'RxNorm'], page_size: 3 } },
   );
+  if (r2.error) throw new Error(r2.error.message);
   console.log('\n  Per-query domain overrides:');
-  for (const item of r2.data ?? []) {
+  for (const item of r2.data) {
     console.log(`    ${item.search_id}:`);
     for (const c of item.results.slice(0, 3)) {
       console.log(`      ${c.concept_name} (${c.vocabulary_id}/${c.domain_id})`);

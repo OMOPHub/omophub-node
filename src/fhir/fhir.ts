@@ -44,10 +44,20 @@ export class Fhir {
       typeof options.coding.code === 'string' &&
       options.coding.code.length > 0;
     const hasFlatCode = typeof options.code === 'string' && options.code.length > 0;
-    // The server also accepts text-only input — `display` alone triggers
+    // The server also accepts text-only input — display text alone triggers
     // a semantic-search fallback to the best-matching standard concept.
-    const hasDisplayOnly = typeof options.display === 'string' && options.display.length > 0;
-    if (!hasCodingObj && !hasFlatCode && !hasDisplayOnly) {
+    // Display can sit at the top level (`{ display }`) or nested inside a
+    // coding object (`{ coding: { display } }`); both are legal FHIR.
+    const flatDisplay = typeof options.display === 'string' && options.display.length > 0;
+    const codingDisplay =
+      options.coding !== undefined &&
+      options.coding !== null &&
+      typeof options.coding === 'object' &&
+      !Array.isArray(options.coding) &&
+      typeof options.coding.display === 'string' &&
+      options.coding.display.length > 0;
+    const hasDisplay = flatDisplay || codingDisplay;
+    if (!hasCodingObj && !hasFlatCode && !hasDisplay) {
       return syntheticError<FhirResolveResult>(
         'missing_required_field',
         'Provide a `coding` object with a `code`, a flat `code`, or `display` text for semantic fallback.',

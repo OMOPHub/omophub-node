@@ -155,6 +155,24 @@ describe('client.fhir.resolve', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  test('accepts top-level `display` alone for semantic fallback', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, mockResolution);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { error } = await client.fhir.resolve({ display: 'blood glucose' });
+    expect(error).toBeNull();
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  test('accepts nested `coding.display` alone for semantic fallback', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, mockResolution);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const { error } = await client.fhir.resolve({ coding: { display: 'blood glucose' } });
+    expect(error).toBeNull();
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
   test('passes onUnmapped through as snake_case', async () => {
     const fetchMock = createMockFetch();
     enqueueSuccess(fetchMock, mockResolution);
