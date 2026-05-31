@@ -1,0 +1,175 @@
+src/domains/interfaces/index.ts
+  s_b724aff89835a7::t_3ccd159fc38a20 1-7
+test/fhir/fhir-url.test.ts
+  s_b724aff89835a7::t_59a8249f737559 1-14
+src/vocabularies/interfaces/index.ts
+  s_b724aff89835a7::t_59e338149ba933 4-6,8
+test/fhir/fhir.test.ts
+  s_b724aff89835a7::t_64bd30a7f7a1a6 80-81,83-89,91-92,95,97-116
+  s_b724aff89835a7::t_0606d268127935 1-14,16-20,22-79,82,90,93-94,96,117-134,150-253
+  s_b724aff89835a7::t_4eaade1804db67 135-149
+src/fhir/fhir-url.ts
+  s_b724aff89835a7::t_017dc3d4fef362 1-18
+src/fhir/fhir.ts
+  s_b724aff89835a7::t_5745449c9fe00e 1-42,44-114,116-130
+  s_b724aff89835a7::t_d497f2b5c35dc2 43
+src/fhir/interfaces/fhir.ts
+  s_b724aff89835a7::t_a811b44a9d8234 1-49,52-80
+  s_b724aff89835a7::t_63b3898d1ea898 50-51
+e2e/concepts.test.ts
+  s_b724aff89835a7::t_68417d14a58b9e 12-13,22-23,26,29-35,37-42,47-61,65-66,68-71,73,77-83,87-103,107,112-114,123,125-126,134-151,156-170,172-174,177,180-187,189-195,198-201,206-210,212-217,221,223-229,231-234,237-241,243-245,247-250,252-258
+  s_b724aff89835a7::t_c2fe63ccafeef6 108-111,115-118
+  s_b724aff89835a7::t_d9bd27f0180064 2-8
+  s_b724aff89835a7::t_c9b50cd94bca80 62-64,67,72,74-76
+  s_b724aff89835a7::t_708fbb6a1cc1cc 36,43-46
+  s_b724aff89835a7::t_a2ebf52200d644 196-197,202-205
+  s_b724aff89835a7::t_e50900fb658d87 211,218-220,222
+  s_b724aff89835a7::t_f9e3c57f503736 104-106,119-120
+  s_b724aff89835a7::t_543603ef35b042 235-236,242
+  s_b724aff89835a7::t_83c033e08b5b7a 230
+  s_b724aff89835a7::t_55b4bc74eb342e 152-155,171
+  s_b724aff89835a7::t_d25f75cbc9568c 251,259-267
+  s_b724aff89835a7::t_46ae49f7d439cb 1,9-11,14-21,24-25,27-28,84-86,122,124,127-133,175-176,178-179,188,268-269
+e2e/fhir.test.ts
+  s_b724aff89835a7::t_9f6814a55ad3de 3,7-8,17,19,22,25-75,77-84,88-110,120-179,184,186-189
+  s_b724aff89835a7::t_63e7da1024bcd4 1-2,4-6,9-16,18,20-21,23-24,111-119,180-183,185,190-191
+  s_b724aff89835a7::t_6a4ac449200f6d 76,85-86
+tsconfig.e2e.json
+  s_b724aff89835a7::t_e8e52eac52433a 1-9
+e2e/abort-timeout.test.ts
+  s_b724aff89835a7::t_0eb0c35cef2988 1-79
+src/search/interfaces/search-result.ts
+  s_b724aff89835a7::t_8783c756acd978 36-54
+src/search/interfaces/bulk-search.ts
+  s_b724aff89835a7::t_63e139971810ce 56-58
+  s_b724aff89835a7::t_89023e2f618060 39-44,55,59
+src/index.ts
+  s_b724aff89835a7::t_067fbea746da60 1,53-60
+  s_b724aff89835a7::t_8a4cb33fee60b5 28
+  s_b724aff89835a7::t_eb4ce4213d322a 35
+biome.json
+  s_b724aff89835a7::t_2c56a1eeccf3ca 41
+  s_b724aff89835a7::t_479ae4f1c667e5 37
+src/fhir/interfaces/resolve-options.ts
+  s_b724aff89835a7::t_fa9673abef328d 1-34
+e2e/auth.test.ts
+  s_b724aff89835a7::t_eb526f80c5e238 1-47
+src/client.ts
+  s_b724aff89835a7::t_9ba147f8fed0b2 73
+  s_b724aff89835a7::t_e274cf5f021eda 107
+  s_b724aff89835a7::t_93b0b5e179145f 17
+src/vocabularies/vocabularies.ts
+  s_b724aff89835a7::t_24815e97bbd2b9 92-94
+  s_b724aff89835a7::t_efd0aebad3b004 6-8,10,19-20,26,28,75,77-78,85-88,99,101
+  s_b724aff89835a7::t_4f9a934c1f5ca7 82-83
+src/search/interfaces/index.ts
+  s_b724aff89835a7::t_c2e79fcd25a8a9 18-19
+src/domains/domains.ts
+  s_b724aff89835a7::t_ed5805a7b61ad1 4,15,22-24,26,34-35,42,44
+package.json
+  s_b724aff89835a7::t_4bdf192eed6cf1 23
+  s_b724aff89835a7::t_8c6bc55145eef9 24-28
+src/vocabularies/interfaces/vocabulary.ts
+  s_b724aff89835a7::t_1a4aa5870f83f8 49-53,58-59,61-63,66,68-72
+  s_b724aff89835a7::t_2f5c5945d83f25 54-57,60
+  s_b724aff89835a7::t_8a4db79e7c8bcd 64-65,67,73-77
+src/fhir/interfaces/resolve-codeable-concept-options.ts
+  s_b724aff89835a7::t_a528b4709e53ed 1-9
+src/fhir/interfaces/resolve-batch-options.ts
+  s_b724aff89835a7::t_3f55c1b4c64d44 1-8
+src/fhir/interfaces/index.ts
+  s_b724aff89835a7::t_9bb5dc8b857ff4 1-14
+e2e/vocabularies.test.ts
+  s_b724aff89835a7::t_2e185ac9567416 109,114-116,119,126-127,139-140
+  s_b724aff89835a7::t_7dab3d6bc5093e 1-6,8-9,13-14,17,19-20,22-23,67-72,81-87,141-153
+  s_b724aff89835a7::t_19efb671f0db72 46-47,49,52-61
+  s_b724aff89835a7::t_9458d1d9a624a1 11-12
+  s_b724aff89835a7::t_45e6300f025249 7,10,15-16,18
+  s_b724aff89835a7::t_5b352786829c82 21,24-45,48,50-51,62-66,73-80,88-108,110-113,117-118,120-125,128-138
+src/domains/interfaces/domain.ts
+  s_b724aff89835a7::t_f6f19f22722c8f 23-38
+test/auth/auth.test.ts
+  s_b724aff89835a7::t_329372d0d52d7e 42-48
+  s_b724aff89835a7::t_b2d73182eae0c9 1-41,49
+e2e/_helpers.ts
+  s_b724aff89835a7::t_3cb7c1cdbf72bf 32-34
+  s_b724aff89835a7::t_90849c4663b154 40-54
+  s_b724aff89835a7::t_e1f3d17dfdf8cb 1-31,35-39,55,61-64,66-67
+  s_b724aff89835a7::t_b7cb2fd31dd4a6 56-60,65
+e2e/search.test.ts
+  s_b724aff89835a7::t_96ba637d469d1c 44-47
+  s_b724aff89835a7::t_4ac6989b9e6f59 206,217-221
+  s_b724aff89835a7::t_f8ca9e31b0d3c7 2-8
+  s_b724aff89835a7::t_ad9c640e5b6406 121-126
+  s_b724aff89835a7::t_14bad930ec4fac 42,48,50,52-56
+  s_b724aff89835a7::t_7b888e57bad7e2 12-13,26,29-41,43,49,51,57-118,129,132,134-165,167-168,172,178-181,183-193,202-205,207-216,222-235,237-271,273-274
+  s_b724aff89835a7::t_20eda72d4259d2 176
+  s_b724aff89835a7::t_977342085eefd9 182,194-201
+  s_b724aff89835a7::t_444e658adc1653 236
+  s_b724aff89835a7::t_5d9e5f76c0df05 166,169-171
+  s_b724aff89835a7::t_768c1ad7e96c0a 1,9-11,14-25,27-28,119-120,127-128,130-131,133,173-175,177,275-276
+  s_b724aff89835a7::t_5e6bf2f5146b98 272
+e2e/url-encoding.test.ts
+  s_b724aff89835a7::t_17828affe6c46e 7,10-11
+  s_b724aff89835a7::t_93a3eb070ec5e0 1-6,8-9,12-47,49-103
+e2e/hierarchy-relationships-mappings.test.ts
+  s_b724aff89835a7::t_648ca7de9206f4 12-13,18-22,27-40,42-43,46,56-62,69-70,72-79,85,88,90,92-93,102-115,130,134-137,139-142,145,148-169,172-173,181,184-197,201-211,215-225,228,233-242,245
+  s_b724aff89835a7::t_f38964a8690a73 15-17,23-26
+  s_b724aff89835a7::t_458b5ebfcefc0c 41,44-45,47-55
+  s_b724aff89835a7::t_8186906fd1b3f6 71,80-84,86-87
+  s_b724aff89835a7::t_dfb99673926123 1,9-11,14,63-68,89,91,94-101,116-129,131-133,138,143-144,147,170-171,174-180,182-183,198-200,212-214,226-227,229-232,243-244,246-247
+  s_b724aff89835a7::t_c6ff3ad016432b 2-8
+e2e/domains.test.ts
+  s_b724aff89835a7::t_4a387bb4df38b4 12-13,33,41-43
+  s_b724aff89835a7::t_bedc1f9aa8d2e7 1,3-5,8-11,14,16-17,19-20,34-36,99-100
+  s_b724aff89835a7::t_12debedb889e0e 2
+  s_b724aff89835a7::t_5db137884e3f94 30-32,37-40
+  s_b724aff89835a7::t_feb5135fb79794 51,56-59
+  s_b724aff89835a7::t_9c880db92b4476 67,69-72
+  s_b724aff89835a7::t_18a089d2f6b192 6-7,15,18,21-29,44-50,52-55,60-66,68,73-98
+src/search/search.ts
+  s_b724aff89835a7::t_d585f89cf22dda 11
+  s_b724aff89835a7::t_0919194854e366 25
+  s_b724aff89835a7::t_6277c49f378fb2 153-155,160,162
+src/concepts/interfaces/concept.ts
+  s_b724aff89835a7::t_98645257f0b75f 5-7,22-26,41-52,73-78,80-88,95-99,101-108,130-134,140-150,153-164
+e2e/server-errors.test.ts
+  s_b724aff89835a7::t_63d6f53ecc57c4 9,18,26,35,46,54,66,79,94
+  s_b724aff89835a7::t_0ddedd7cc4103f 2
+  s_b724aff89835a7::t_f90af105d6dd37 82-85,87-89
+  s_b724aff89835a7::t_115258dbfa8a59 33,37-41
+  s_b724aff89835a7::t_39f8f1b5b681f9 1,3-8,10-17,19-25,27-32,34,36,42-45,47-53,55-65,67-78,80-81,86,90-93,95-103
+src/auth/auth.ts
+  s_b724aff89835a7::t_1e7eb0d2cb7230 25-29
+  s_b724aff89835a7::t_14bf501a4d2437 1-24,30-39
+README.md
+  s_b724aff89835a7::t_c2bb2338e17015 20-22,25-26,33-35,39-286
+CHANGELOG.md
+  s_b724aff89835a7::t_de0057e2da8951 85,87-96,99-124
+  s_b724aff89835a7::t_4d8db6e41e2f9f 71,73,76,78,83
+  s_b724aff89835a7::t_bfe018a3ab63c7 70,72,74-75,77,79-82,84,86,97-98
+  s_b724aff89835a7::t_94da45e15c7b2b 47-69
+vitest.e2e.config.ts
+  s_b724aff89835a7::t_328279e999500e 28-29
+  s_b724aff89835a7::t_ec3c6ef087bfd4 1-27,30-34
+e2e/pagination.test.ts
+  s_b724aff89835a7::t_ef892150e9b9b6 1-124
+src/concepts/interfaces/index.ts
+  s_b724aff89835a7::t_6109f79253b281 7,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "82b3dd4e938da87d8f45530c62c34065f552640f",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
