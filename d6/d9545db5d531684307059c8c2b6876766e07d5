@@ -1,0 +1,25 @@
+src/search/interfaces/basic-search-options.ts
+  s_b724aff89835a7::t_6ff66ea8f12a3a 14
+CHANGELOG.md
+  s_b724aff89835a7::t_7c33753bcf2ee5 7-13
+src/vocabularies/interfaces/list-vocabularies-options.ts
+  s_b724aff89835a7::t_cf20ece4e6b898 6
+src/vocabularies/interfaces/vocabulary-concepts-options.ts
+  s_b724aff89835a7::t_3a77b3c5b6bea5 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d6d9545db5d531684307059c8c2b6876766e07d5",
+  "prompts": {},
+  "sessions": {
+    "s_b724aff89835a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "abbaee52-99b6-404f-b925-4f46c3915990",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
