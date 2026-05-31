@@ -1,13 +1,13 @@
 import type { OMOPHub } from '../client.js';
 import type { GetOptions } from '../common/interfaces/get-options.js';
-import type { PaginatedData } from '../common/interfaces/pagination.js';
-import type { ConceptSummary } from '../concepts/interfaces/concept.js';
 import type { Response as OMOPHubResponse } from '../interfaces.js';
 import type { ListVocabulariesOptions } from './interfaces/list-vocabularies-options.js';
 import type {
-  ConceptClass,
+  ListConceptClassesResult,
+  ListVocabulariesResult,
+  ListVocabularyDomainsResult,
   Vocabulary,
-  VocabularyDomain,
+  VocabularyConceptsResult,
   VocabularyStats,
 } from './interfaces/vocabulary.js';
 import type { VocabularyConceptsOptions } from './interfaces/vocabulary-concepts-options.js';
@@ -16,15 +16,16 @@ export class Vocabularies {
   constructor(private readonly client: OMOPHub) {}
 
   /**
-   * List vocabularies.
+   * List vocabularies. Result is wrapped under `vocabularies`; pagination
+   * metadata lives on the outer `Response.meta.pagination`.
    *
    * @see https://docs.omophub.com/api-reference/vocabularies/list
    */
   async list(
     options: ListVocabulariesOptions & GetOptions = {},
-  ): Promise<OMOPHubResponse<Vocabulary[] | PaginatedData<Vocabulary>>> {
+  ): Promise<OMOPHubResponse<ListVocabulariesResult>> {
     const { signal, headers, query, ...flags } = options;
-    return this.client.get<Vocabulary[] | PaginatedData<Vocabulary>>('/vocabularies', {
+    return this.client.get<ListVocabulariesResult>('/vocabularies', {
       signal,
       headers,
       query: { ...flags, ...query },
@@ -71,29 +72,33 @@ export class Vocabularies {
   /**
    * Vocabulary-scoped domain catalog. Distinct from `client.domains.list()`
    * which hits `/domains` — this one returns domains as they appear in the
-   * vocabulary metadata table.
+   * vocabulary metadata table. Wrapped under `domains`.
    */
-  async domains(options: GetOptions = {}): Promise<OMOPHubResponse<VocabularyDomain[]>> {
-    return this.client.get<VocabularyDomain[]>('/vocabularies/domains', options);
+  async domains(options: GetOptions = {}): Promise<OMOPHubResponse<ListVocabularyDomainsResult>> {
+    return this.client.get<ListVocabularyDomainsResult>('/vocabularies/domains', options);
   }
 
   /**
-   * Concept-class catalog across all vocabularies.
+   * Concept-class catalog across all vocabularies. Returns a **bare array**
+   * of `ConceptClass` rows — confirmed against the live API; not wrapped.
    */
-  async conceptClasses(options: GetOptions = {}): Promise<OMOPHubResponse<ConceptClass[]>> {
-    return this.client.get<ConceptClass[]>('/vocabularies/concept-classes', options);
+  async conceptClasses(
+    options: GetOptions = {},
+  ): Promise<OMOPHubResponse<ListConceptClassesResult>> {
+    return this.client.get<ListConceptClassesResult>('/vocabularies/concept-classes', options);
   }
 
   /**
-   * Paginated listing of concepts within a single vocabulary, with
-   * optional search and standard/invalid filters.
+   * Paginated listing of concepts within a single vocabulary. Returns a
+   * **bare array** of `Concept` rows — confirmed against the live API;
+   * pagination metadata on outer `Response.meta`.
    */
   async concepts(
     vocabularyId: string,
     options: VocabularyConceptsOptions & GetOptions = {},
-  ): Promise<OMOPHubResponse<PaginatedData<ConceptSummary>>> {
+  ): Promise<OMOPHubResponse<VocabularyConceptsResult>> {
     const { signal, headers, query, ...flags } = options;
-    return this.client.get<PaginatedData<ConceptSummary>>(
+    return this.client.get<VocabularyConceptsResult>(
       `/vocabularies/${encodeURIComponent(vocabularyId)}/concepts`,
       { signal, headers, query: { ...flags, ...query } },
     );

@@ -14,6 +14,7 @@ import { unwrapEnvelope } from './common/utils/unwrap-envelope.js';
 import { Concepts } from './concepts/concepts.js';
 import { Domains } from './domains/domains.js';
 import { OMOPHubError } from './errors.js';
+import { Fhir } from './fhir/fhir.js';
 import { Hierarchy } from './hierarchy/hierarchy.js';
 import type { Response as OMOPHubResponse } from './interfaces.js';
 import { Mappings } from './mappings/mappings.js';
@@ -69,6 +70,7 @@ export class OMOPHub {
 
   readonly concepts: Concepts;
   readonly domains: Domains;
+  readonly fhir: Fhir;
   readonly hierarchy: Hierarchy;
   readonly mappings: Mappings;
   readonly relationships: Relationships;
@@ -102,6 +104,7 @@ export class OMOPHub {
 
     this.concepts = new Concepts(this);
     this.domains = new Domains(this);
+    this.fhir = new Fhir(this);
     this.hierarchy = new Hierarchy(this);
     this.mappings = new Mappings(this);
     this.relationships = new Relationships(this);

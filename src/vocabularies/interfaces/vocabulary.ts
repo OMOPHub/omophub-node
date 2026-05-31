@@ -8,6 +8,10 @@ export interface Vocabulary {
   vocabulary_concept_id?: number;
   vocabulary_reference?: string;
   vocabulary_version?: string;
+  /** ISO timestamp the vocabulary row was added to the deployment. */
+  created_at?: string;
+  /** ISO timestamp the vocabulary row was last refreshed. */
+  updated_at?: string;
 }
 
 export interface VocabularyStats {
@@ -46,3 +50,32 @@ export interface ConceptClass {
   concept_class_name: string;
   concept_class_concept_id?: number;
 }
+
+/**
+ * `GET /vocabularies` returns a named-wrapper object with the array under
+ * `vocabularies` (NOT a bare array, NOT a generic `data` envelope).
+ * Pagination metadata lives on the outer `Response.meta.pagination`.
+ *
+ * The `includeStats` query flag does NOT embed per-item stats here —
+ * the live API ignores it for the list endpoint. Use
+ * `client.vocabularies.stats(vocabularyId)` to fetch stats per vocabulary.
+ */
+export interface ListVocabulariesResult {
+  vocabularies: Vocabulary[];
+}
+
+/**
+ * `GET /vocabularies/{id}/concepts` returns a **bare array** of full
+ * `Concept` rows. Pagination metadata lives on the outer `Response.meta`.
+ */
+export type VocabularyConceptsResult = import('../../concepts/interfaces/concept.js').Concept[];
+
+export interface ListVocabularyDomainsResult {
+  domains: VocabularyDomain[];
+}
+
+/**
+ * `GET /vocabularies/concept-classes` returns a **bare array** of
+ * concept-class rows.
+ */
+export type ListConceptClassesResult = ConceptClass[];

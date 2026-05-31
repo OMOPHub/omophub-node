@@ -1,3 +1,4 @@
+export { getApiKey, hasApiKey, setApiKey } from './auth/auth.js';
 export { OMOPHub, type OMOPHubOptions } from './client.js';
 export type {
   ApiEnvelope,
@@ -23,14 +24,15 @@ export type {
   BatchConceptsOptions,
   Concept,
   ConceptHierarchyNode,
-  ConceptRecommendation,
   ConceptRelationship,
+  ConceptRelationshipNode,
   ConceptRelationshipsOptions,
   ConceptRelationshipsResult,
   ConceptSuggestion,
   ConceptSummary,
   GetConceptByCodeOptions,
   GetConceptOptions,
+  RecommendedConceptEntry,
   RecommendedConceptsOptions,
   RecommendedConceptsResult,
   RelatedConcept,
@@ -47,6 +49,22 @@ export type {
   ListDomainsOptions,
 } from './domains/interfaces/index.js';
 export { OMOPHubError, OMOPHubIteratorError } from './errors.js';
+export { type FhirVersion, omophubFhirUrl } from './fhir/fhir-url.js';
+export type {
+  CodeableConcept,
+  Coding,
+  FhirBatchResult,
+  FhirBatchSummary,
+  FhirCodeableConceptResult,
+  FhirResolution,
+  FhirResolveResult,
+  RecommendedConceptOutput,
+  ResolveBatchOptions,
+  ResolveCodeableConceptOptions,
+  ResolveCommonOptions,
+  ResolvedConcept,
+  ResolveOptions,
+} from './fhir/interfaces/index.js';
 export type {
   Ancestor,
   AncestorsOptions,

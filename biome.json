@@ -34,11 +34,11 @@
     }
   },
   "files": {
-    "includes": ["src/**", "test/**"]
+    "includes": ["src/**", "test/**", "e2e/**"]
   },
   "overrides": [
     {
-      "includes": ["test/**"],
+      "includes": ["test/**", "e2e/**"],
       "linter": {
         "rules": {
           "style": {

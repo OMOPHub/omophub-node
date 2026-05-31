@@ -15,6 +15,8 @@ export type {
 export type { BulkSemanticDefaults, BulkSemanticOptions } from './bulk-semantic-options.js';
 export type { PaginateOptions } from './paginate-options.js';
 export type {
+  AutocompleteEntry,
+  AutocompleteResult,
   SearchFacet,
   SearchFacets,
   SearchMetadata,
