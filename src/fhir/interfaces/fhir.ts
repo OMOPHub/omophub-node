@@ -74,7 +74,13 @@ export interface FhirBatchResult {
 
 export interface FhirCodeableConceptResult {
   input: Record<string, unknown>;
-  best_match?: FhirResolution;
-  alternatives: FhirResolution[];
+  /**
+   * The best-matching coding resolved to a standard concept. Wrapped as
+   * `{ input, resolution }` — the same shape `fhir.resolve()` returns —
+   * because the server reports both the original coding and the resolution
+   * details per-pick.
+   */
+  best_match?: FhirResolveResult;
+  alternatives: FhirResolveResult[];
   unresolved: Record<string, unknown>[];
 }

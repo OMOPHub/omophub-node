@@ -12,6 +12,7 @@ export type {
   RecommendedConceptsResult,
   RelatedConcept,
   RelatedConceptsResult,
+  RelationshipConcept,
   Synonym,
 } from './concept.js';
 export type { ConceptRelationshipsOptions } from './concept-relationships-options.js';

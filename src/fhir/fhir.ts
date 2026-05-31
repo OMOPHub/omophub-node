@@ -44,10 +44,13 @@ export class Fhir {
       typeof options.coding.code === 'string' &&
       options.coding.code.length > 0;
     const hasFlatCode = typeof options.code === 'string' && options.code.length > 0;
-    if (!hasCodingObj && !hasFlatCode) {
+    // The server also accepts text-only input — `display` alone triggers
+    // a semantic-search fallback to the best-matching standard concept.
+    const hasDisplayOnly = typeof options.display === 'string' && options.display.length > 0;
+    if (!hasCodingObj && !hasFlatCode && !hasDisplayOnly) {
       return syntheticError<FhirResolveResult>(
         'missing_required_field',
-        'Provide a `coding` object with a `code`, or supply `code` (with optional `system`) at the top level.',
+        'Provide a `coding` object with a `code`, a flat `code`, or `display` text for semantic fallback.',
       );
     }
 

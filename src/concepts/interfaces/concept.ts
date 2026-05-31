@@ -20,21 +20,40 @@ export interface ConceptSummary {
 }
 
 /**
+ * Concept payload nested inside a `ConceptRelationship` row under
+ * `concept_1` / `concept_2`. Slightly richer than `ConceptSummary` —
+ * the relationships endpoint embeds the full concept metadata.
+ */
+export interface RelationshipConcept extends ConceptSummary {
+  vocabulary_name?: string;
+  domain_id?: string;
+  concept_class_id?: string;
+  standard_concept?: 'S' | 'C' | 'N' | null;
+  valid_start_date?: string;
+  valid_end_date?: string;
+  invalid_reason?: string | null;
+}
+
+/**
  * Full relationship row returned by the dedicated relationships
  * endpoints (`GET /concepts/{id}/relationships`, `relationships.get(id)`,
- * `concepts.relationships(id)`). Carries the target concept's full metadata.
+ * `concepts.relationships(id)`).
+ *
+ * **Wire shape uses `concept_1` / `concept_2`** — NOT a flat `target_*`
+ * projection. For an `aspirin → Halfprin` "Has brand name" row,
+ * `concept_1` is aspirin (the queried side) and `concept_2` is Halfprin
+ * (the related side).
  */
 export interface ConceptRelationship {
+  concept_id_1: number;
+  concept_id_2: number;
   relationship_id: string;
   relationship_name?: string;
-  direction?: 'forward' | 'reverse';
-  target_concept_id: number;
-  target_concept_name: string;
-  target_vocabulary_id: string;
-  target_concept_code: string;
-  target_domain_id?: string;
-  target_concept_class_id?: string;
-  target_standard_concept?: 'S' | 'C' | 'N' | null;
+  reverse_relationship_id?: string;
+  concept_1?: RelationshipConcept;
+  concept_2?: RelationshipConcept;
+  valid_start_date?: string;
+  valid_end_date?: string;
   invalid_reason?: string | null;
 }
 
