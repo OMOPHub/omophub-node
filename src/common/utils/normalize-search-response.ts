@@ -40,7 +40,7 @@ export function normaliseBasicSearchData(raw: unknown): SearchResult {
 }
 
 /**
- * Normalises `GET /concepts/semantic-search` into a flat
+ * Normalises `GET /search/semantic` into a flat
  * `SemanticSearchResult[]` for the iter/all helpers. Handles both
  * `{ results: [...] }` and bare-array forms.
  */

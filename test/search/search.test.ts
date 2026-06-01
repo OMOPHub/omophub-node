@@ -217,7 +217,7 @@ describe('client.search.autocomplete', () => {
 });
 
 describe('client.search.semantic', () => {
-  test('hits GET /concepts/semantic-search with snake-cased query', async () => {
+  test('hits GET /search/semantic with snake-cased query', async () => {
     const fetchMock = createMockFetch();
     enqueueSuccess(fetchMock, { results: [], search_metadata: {} });
     const client = new OMOPHub('oh_test', { fetch: fetchMock });
@@ -228,7 +228,7 @@ describe('client.search.semantic', () => {
       pageSize: 20,
     });
     const { url } = lastCall(fetchMock);
-    expect(url).toContain('/concepts/semantic-search');
+    expect(url).toContain('/search/semantic');
     expect(url).toContain('query=high+blood+sugar');
     expect(url).toContain('vocabulary_ids=SNOMED');
     expect(url).toContain('standard_concept=S');

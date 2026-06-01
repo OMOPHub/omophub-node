@@ -181,7 +181,7 @@ export class Search {
     options: SemanticSearchOptions & GetOptions = {},
   ): Promise<OMOPHubResponse<SemanticSearchResultSet>> {
     const { signal, headers, query: extraQuery, ...flags } = options;
-    const response = await this.client.get<unknown>('/concepts/semantic-search', {
+    const response = await this.client.get<unknown>('/search/semantic', {
       signal,
       headers,
       query: { ...flags, ...extraQuery, query },
