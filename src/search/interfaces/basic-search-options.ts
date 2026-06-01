@@ -11,6 +11,6 @@ export interface BasicSearchOptions extends PaginationOptions {
   /** Minimum relevance score (0–1). */
   minScore?: number;
   exactMatch?: boolean;
-  sortBy?: 'relevance' | 'name' | 'concept_count' | 'last_updated';
+  sortBy?: 'relevance' | 'name' | 'code' | 'date';
   sortOrder?: 'asc' | 'desc';
 }

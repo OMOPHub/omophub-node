@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-01
+
+### Changed
+
+- `client.search.semantic()` now calls the canonical path `GET /v1/search/semantic` instead of `GET /v1/concepts/semantic-search`. The legacy path remains a permanent server-side alias, so older SDK installations continue to work — no breaking change. The `User-Agent` and `__version__` are bumped to `1.0.1`.
+
+### Fixed
+
+- Corrected `sortBy` enum values across three options interfaces to match what the API actually accepts. TypeScript users were previously offered values that the server rejects with `validation_error`:
+  - `ListVocabulariesOptions.sortBy`: was `'name' | 'concept_count' | 'last_updated'`, now `'name' | 'priority' | 'updated'`.
+  - `VocabularyConceptsOptions.sortBy`: was `'name' | 'concept_count' | 'last_updated'`, now `'name' | 'concept_id' | 'concept_code'`.
+  - `BasicSearchOptions.sortBy`: was `'relevance' | 'name' | 'concept_count' | 'last_updated'`, now `'relevance' | 'name' | 'code' | 'date'`.
+
 ## [1.0.0] - 2026-05-31
 
 ### Added
@@ -63,7 +76,8 @@ client.fhir          - resolve, resolveBatch, resolveCodeableConcept            
 Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
-<!-- Reference-style version links. Update when the v1.0.0 tag is cut. -->
-[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.0.0...HEAD
+<!-- Reference-style version links. -->
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.1
 [1.0.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.0
 

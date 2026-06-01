@@ -1,6 +1,6 @@
 {
   "name": "@omophub/omophub-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official OMOPHub Node.js / TypeScript SDK for the OHDSI medical vocabularies API - search, lookup, map, and navigate concepts across SNOMED, ICD10, RxNorm, LOINC, and more.",
   "type": "module",
   "main": "dist/index.js",
