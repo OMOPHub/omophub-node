@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-06-02
+
+### Changed
+
+- Bumped `vitest` and `@vitest/coverage-v8` devDependencies from `^4.1.7` to `^4.1.8`. 
+
 ## [1.0.1] - 2026-06-01
 
 ### Changed
@@ -77,7 +83,8 @@ Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
 <!-- Reference-style version links. -->
-[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.1.0
 [1.0.1]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.1
 [1.0.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.0
 
