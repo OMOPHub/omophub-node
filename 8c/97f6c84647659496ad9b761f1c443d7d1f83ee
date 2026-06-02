@@ -1,0 +1,14 @@
+CHANGELOG.md
+  h_70ae365dc0c3d1 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8c97f6c84647659496ad9b761f1c443d7d1f83ee",
+  "prompts": {},
+  "humans": {
+    "h_70ae365dc0c3d1": {
+      "author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
