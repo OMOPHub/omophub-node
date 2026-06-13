@@ -26,7 +26,7 @@ import { Vocabularies } from './vocabularies/vocabularies.js';
 const DEFAULT_BASE_URL = 'https://api.omophub.com/v1';
 const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_MAX_RETRIES = 3;
-const DEFAULT_USER_AGENT = `omophub-node/${__version__}`;
+const DEFAULT_USER_AGENT = `OMOPHub-SDK-Node/${__version__}`;
 
 export interface OMOPHubOptions {
   /** Base URL of the OMOPHub API. Defaults to env `OMOPHUB_API_URL` or the production URL. */

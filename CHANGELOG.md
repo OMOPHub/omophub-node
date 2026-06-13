@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-06-13
+
+### Changed
+
+- Unified the SDK `User-Agent` header with the Python and R SDKs. Outgoing requests now send `OMOPHub-SDK-Node/<version>` (e.g. `OMOPHub-SDK-Node/1.0.3`).
+
 ## [1.0.2] - 2026-06-02
 
 ### Changed
