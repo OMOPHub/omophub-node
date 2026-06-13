@@ -43,7 +43,7 @@ describe('OMOPHub HTTP dispatch', () => {
     expect(init.method).toBe('GET');
     const requestHeaders = new Headers(init.headers);
     expect(requestHeaders.get('authorization')).toBe('Bearer oh_test');
-    expect(requestHeaders.get('user-agent')).toMatch(/^omophub-node\//);
+    expect(requestHeaders.get('user-agent')).toMatch(/^OMOPHub-SDK-Node\//);
     expect(requestHeaders.get('content-type')).toBe('application/json');
     expect(init.body).toBeUndefined();
   });

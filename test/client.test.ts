@@ -27,7 +27,7 @@ describe('OMOPHub constructor', () => {
     expect(client.baseUrl).toBe('https://api.omophub.com/v1');
     expect(client.timeoutMs).toBe(30_000);
     expect(client.maxRetries).toBe(3);
-    expect(client.userAgent).toMatch(/^omophub-node\/\d+\.\d+\.\d+/);
+    expect(client.userAgent).toMatch(/^OMOPHub-SDK-Node\/\d+\.\d+\.\d+/);
     expect(client.vocabVersion).toBeUndefined();
     expect(new Headers(lastCall(fetchMock).init.headers).get('authorization')).toBe(
       'Bearer oh_test_key',
