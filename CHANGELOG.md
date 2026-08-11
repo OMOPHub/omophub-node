@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-11
+
+### Added
+
+- `GetMappingsOptions` extends `PaginationOptions`, so `mappings.get()` accepts `page` and `pageSize`. `GET /v1/concepts/{id}/mappings` became paginated on 2026-08-04; before that it applied a fixed `LIMIT 100` server-side with no total and no `has_next`, so a concept with 1,500 mappings returned 100 of them and nothing said so. `pageSize` defaults to 100 server-side, matching the old cap, so an existing call returns exactly the page it returned before - now with `meta.pagination` alongside it.
+- `mappings.getIter()` and `mappings.getAll()`, matching the `basicIter` / `basicAll` pattern on the search resource. Prefer these when assembling a code list: they follow `has_next` to the end rather than trusting one page. `getIter` throws `OMOPHubIteratorError` on a failed page; `getAll` accumulates errors as values so a partial result is distinguishable from a complete one.
+
+### Changed
+
+- `PaginateOptions` moved from `src/search/interfaces/` to `src/common/interfaces/` now that more than one resource iterates. The exported type name and its export from the package root are unchanged; only the internal path moved.
+
+### Notes
+
+- The server clamps `page_size` to 200 on this endpoint and does not report having done so, so a larger value silently yields a smaller page.
+
 ## [1.0.3] - 2026-06-13
 
 ### Changed
@@ -20,7 +35,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
-- `client.search.semantic()` now calls the canonical path `GET /v1/search/semantic` instead of `GET /v1/concepts/semantic-search`. The legacy path remains a permanent server-side alias, so older SDK installations continue to work — no breaking change. The `User-Agent` and `__version__` are bumped to `1.0.1`.
+- `client.search.semantic()` now calls the canonical path `GET /v1/search/semantic` instead of `GET /v1/concepts/semantic-search`. The legacy path remains a permanent server-side alias, so older SDK installations continue to work - no breaking change. The `User-Agent` and `__version__` are bumped to `1.0.1`.
 
 ### Fixed
 

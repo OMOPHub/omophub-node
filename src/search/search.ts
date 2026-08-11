@@ -1,5 +1,6 @@
 import type { OMOPHub } from '../client.js';
 import type { GetOptions } from '../common/interfaces/get-options.js';
+import type { PaginateOptions } from '../common/interfaces/paginate-options.js';
 import type { PostOptions } from '../common/interfaces/post-options.js';
 import {
   normaliseBasicSearchData,
@@ -21,7 +22,6 @@ import type {
   BulkSemanticSearchResponse,
 } from './interfaces/bulk-search.js';
 import type { BulkSemanticOptions } from './interfaces/bulk-semantic-options.js';
-import type { PaginateOptions } from './interfaces/paginate-options.js';
 import type { AutocompleteResult, SearchResult } from './interfaces/search-result.js';
 import type { SemanticSearchOptions } from './interfaces/semantic-search-options.js';
 import type {

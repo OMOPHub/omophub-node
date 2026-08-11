@@ -1,18 +1,54 @@
 import type { OMOPHub } from '../client.js';
 import type { GetOptions } from '../common/interfaces/get-options.js';
+import type { PaginateOptions } from '../common/interfaces/paginate-options.js';
+import type { PaginatedData } from '../common/interfaces/pagination.js';
 import type { PostOptions } from '../common/interfaces/post-options.js';
+import { type PaginateAllResult, paginate, paginateAll } from '../common/utils/paginate.js';
 import { syntheticError } from '../common/utils/synthetic-error.js';
 import { toSnakeCaseKeys } from '../common/utils/to-snake-case.js';
 import type { Response as OMOPHubResponse } from '../interfaces.js';
 import type { GetMappingsOptions } from './interfaces/get-mappings-options.js';
 import type { MapConceptsOptions } from './interfaces/map-concepts-options.js';
-import type { MapConceptsResult, MappingsListResult } from './interfaces/mapping.js';
+import type { MapConceptsResult, Mapping, MappingsListResult } from './interfaces/mapping.js';
+
+/** Matches the search resource's iterator default. */
+const ITER_DEFAULT_PAGE_SIZE = 100;
+
+/**
+ * Falls back to a derived page when the server omits `meta.pagination`
+ * (older deployments predating mappings pagination), so the iterators
+ * terminate rather than loop.
+ */
+function derivePagination(
+  response: OMOPHubResponse<unknown>,
+  page: number,
+  pageSize: number,
+  actualCount: number,
+) {
+  const fromMeta = response.meta?.pagination;
+  if (fromMeta) return fromMeta;
+  return {
+    page,
+    page_size: pageSize,
+    total_items: actualCount,
+    total_pages: actualCount < pageSize ? page : page + 1,
+    has_next: actualCount >= pageSize,
+    has_previous: page > 1,
+  };
+}
 
 export class Mappings {
   constructor(private readonly client: OMOPHub) {}
 
   /**
    * List the mappings already defined for a single concept.
+   *
+   * **Paginated — one call is not necessarily the whole set.** `pageSize`
+   * defaults to 100 server-side and is clamped to 200; a concept with more
+   * mappings than that returns a subset that is indistinguishable from a
+   * complete answer unless you read `meta.pagination.has_next`. When you are
+   * assembling a code list, prefer {@link getIter} or {@link getAll}, which
+   * walk every page for you.
    *
    * @see https://docs.omophub.com/api-reference/mappings/get
    */
@@ -26,6 +62,60 @@ export class Mappings {
       headers,
       query: { ...flags, ...query },
     });
+  }
+
+  /**
+   * Async iterator over every mapping for a concept, across all pages.
+   * Throws `OMOPHubIteratorError` if any page fails.
+   */
+  getIter(
+    conceptId: number,
+    options: GetMappingsOptions & GetOptions & PaginateOptions = {},
+  ): AsyncGenerator<Mapping> {
+    const { maxPages, pageSize, ...rest } = options;
+    return paginate<Mapping>((page, size) => this.#fetchPage(conceptId, rest, page, size), {
+      pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE,
+      maxPages,
+    });
+  }
+
+  /**
+   * Eagerly collects every mapping for a concept into a single array.
+   * Errors are accumulated rather than thrown, so a partial result is
+   * distinguishable from a complete one via the returned `errors`.
+   */
+  async getAll(
+    conceptId: number,
+    options: GetMappingsOptions & GetOptions & PaginateOptions = {},
+  ): Promise<PaginateAllResult<Mapping>> {
+    const { maxPages, pageSize, ...rest } = options;
+    return paginateAll<Mapping>((page, size) => this.#fetchPage(conceptId, rest, page, size), {
+      pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE,
+      maxPages,
+    });
+  }
+
+  /**
+   * Adapts `get` into the generic `PageFetcher` shape the pagination
+   * helpers expect: `mappings` lifted out of the result object, and the
+   * envelope's real `meta.pagination` passed through so `has_next` drives
+   * the walk rather than a page-length guess.
+   */
+  async #fetchPage(
+    conceptId: number,
+    rest: Omit<GetMappingsOptions & GetOptions, 'page' | 'pageSize'>,
+    page: number,
+    size: number,
+  ): Promise<OMOPHubResponse<PaginatedData<Mapping>>> {
+    const r = await this.get(conceptId, { ...rest, page, pageSize: size });
+    if (r.error) return { ...r, data: null } as never;
+    return {
+      ...r,
+      data: {
+        data: r.data.mappings ?? [],
+        meta: { pagination: derivePagination(r, page, size, r.data.mappings?.length ?? 0) },
+      },
+    };
   }
 
   /**

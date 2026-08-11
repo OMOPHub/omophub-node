@@ -5,6 +5,7 @@ export type {
 } from './api-envelope.js';
 export type { DeleteOptions } from './delete-options.js';
 export type { GetOptions } from './get-options.js';
+export type { PaginateOptions } from './paginate-options.js';
 export type { PaginatedData, PaginationMeta, PaginationOptions } from './pagination.js';
 export type { PatchOptions } from './patch-options.js';
 export type { PerCallOptions, QueryValue } from './per-call-options.js';
