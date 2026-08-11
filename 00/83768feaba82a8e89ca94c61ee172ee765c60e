@@ -1,0 +1,33 @@
+CHANGELOG.md
+  s_675010497a6bc7::t_4c656f933cd908 14-21,24-25
+src/common/utils/index.ts
+  s_675010497a6bc7::t_71a2aca6b56449 10-12
+src/common/utils/paginate.ts
+  s_675010497a6bc7::t_6e6c3fb0ca15c5 98-145
+src/mappings/interfaces/get-mappings-options.ts
+  s_675010497a6bc7::t_7cc34adb63c872 7-22
+src/mappings/mappings.ts
+  s_675010497a6bc7::t_80f315efed90a4 6-12,21-24,26,65,81,104-111
+src/search/search.ts
+  s_675010497a6bc7::t_b46a005e1a42ea 9-15,40-46,243,268
+test/mappings/mappings.test.ts
+  s_675010497a6bc7::t_25444c3a4820da 50-84,93-188
+test/search/search.test.ts
+  s_675010497a6bc7::t_ecd47454de665b 319-378
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0083768feaba82a8e89ca94c61ee172ee765c60e",
+  "prompts": {},
+  "sessions": {
+    "s_675010497a6bc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ac8e644b-8ae2-49d5-94a0-66989382a45d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
