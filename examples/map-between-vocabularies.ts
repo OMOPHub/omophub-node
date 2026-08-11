@@ -10,23 +10,52 @@ async function getMappings(): Promise<void> {
   console.log('=== Concept Mappings ===');
   const client = new OMOPHub();
 
-  // Type 2 diabetes mellitus (SNOMED)
+  // Type 2 diabetes mellitus (SNOMED, standard)
   const conceptId = 201826;
-  const { data, error } = await client.mappings.get(conceptId, {
-    targetVocabulary: 'ICD10CM',
-  });
+
+  // `get()` returns ONE page. `meta.pagination` is the only thing that says
+  // whether it was the whole set — see getEveryMapping() below.
+  const { data, error } = await client.mappings.get(conceptId);
   if (error) {
     console.log(`API error: ${error.message}`);
     return;
   }
 
-  console.log(`Mappings for concept ${conceptId} → ICD10CM:`);
-  console.log(`  Total mappings: ${data.summary?.total_mappings ?? data.mappings.length}`);
-
+  console.log(`Mappings for concept ${conceptId} (this page: ${data.mappings.length}):`);
   for (const m of data.mappings.slice(0, 10)) {
-    console.log(`\n  [${m.target_vocabulary_id}] ${m.target_concept_code}`);
-    console.log(`    Name: ${m.target_concept_name}`);
-    console.log(`    Type: ${m.mapping_type}`);
+    // A mapping row carries only these fields. `target_vocabulary_id` and
+    // `target_concept_code` are optional on the type because this endpoint
+    // does not return them — fetch the target concept if you need them.
+    console.log(`  ${m.relationship_id}: ${m.target_concept_id} ${m.target_concept_name}`);
+  }
+}
+
+/**
+ * Find which ICD-10-CM codes correspond to a SNOMED concept.
+ *
+ * Note the DIRECTION. `Maps to` always points at a *standard* concept, and
+ * ICD-10-CM is non-standard, so `targetVocabulary: 'ICD10CM'` on the default
+ * relationship matches nothing — it returns an empty list rather than an
+ * error. The codes that roll up INTO a standard concept need `Mapped from`.
+ */
+async function mapToSpecificVocabulary(): Promise<void> {
+  console.log('\n=== Mapping to a Specific Vocabulary ===');
+  const client = new OMOPHub();
+
+  const conceptId = 201826;
+
+  const { data: empty } = await client.mappings.get(conceptId, {
+    targetVocabulary: 'ICD10CM',
+  });
+  console.log(`  'Maps to' + ICD10CM:     ${empty?.mappings.length ?? 0} rows (as expected)`);
+
+  const icd = await client.mappings.getAll(conceptId, {
+    relationshipIds: ['Mapped from'],
+    targetVocabulary: 'ICD10CM',
+  });
+  console.log(`  'Mapped from' + ICD10CM: ${icd.data.length} rows`);
+  for (const m of icd.data.slice(0, 5)) {
+    console.log(`    ← ${m.target_concept_id} ${m.target_concept_name}`);
   }
 }
 
@@ -110,8 +139,78 @@ async function lookupByCode(): Promise<void> {
   }
 }
 
+/**
+ * Walk every page instead of trusting the first one.
+ *
+ * This is the one to copy when you are building a code list: a partial code
+ * list is wrong in a way nothing in the result reveals.
+ */
+async function getEveryMapping(): Promise<void> {
+  console.log('\n=== Every Mapping (all pages) ===');
+  const client = new OMOPHub();
+
+  const conceptId = 201826;
+
+  // Eager: one array, errors accumulated rather than thrown, so a partial
+  // result is distinguishable from a complete one.
+  const { data, errors, pagesFetched } = await client.mappings.getAll(conceptId);
+  const [firstError] = errors;
+  if (firstError) {
+    console.log(`  Incomplete — ${errors.length} page(s) failed: ${firstError.message}`);
+  }
+  console.log(`  ${data.length} mappings across ${pagesFetched} page(s)`);
+
+  // Streaming: same walk, one mapping at a time, without holding them all.
+  let count = 0;
+  for await (const _m of client.mappings.getIter(conceptId)) count++;
+  console.log(`  getIter yielded the same ${count}`);
+}
+
+/**
+ * Composite concepts decompose across TWO relationships, and the default
+ * returns only the first — you learn the patient is allergic to *a drug*
+ * but not *which* drug.
+ */
+async function valueAsConcept(): Promise<void> {
+  console.log('\n=== Value-as-Concept ===');
+  const client = new OMOPHub();
+
+  const conceptId = 4167462; // Allergy to penicillin G
+
+  const { data, error } = await client.mappings.get(conceptId, {
+    relationshipIds: ['Maps to', 'Maps to value'],
+  });
+  if (error) {
+    console.log(`API error: ${error.message}`);
+    return;
+  }
+
+  for (const m of data.mappings) {
+    // `Maps to` → the OMOP concept column; `Maps to value` → value_as_concept_id.
+    const column = m.relationship_id === 'Maps to value' ? 'value_as_concept_id' : 'concept_id';
+    console.log(`  ${m.relationship_id}: ${m.target_concept_name} → ${column}`);
+  }
+}
+
+/** Deprecated mappings are returned by default; pass false to drop them. */
+async function excludeInvalid(): Promise<void> {
+  console.log('\n=== Valid Mappings Only ===');
+  const client = new OMOPHub();
+
+  const conceptId = 201826;
+  const withInvalid = await client.mappings.getAll(conceptId);
+  const validOnly = await client.mappings.getAll(conceptId, { includeInvalid: false });
+
+  console.log(`  default (includes deprecated): ${withInvalid.data.length}`);
+  console.log(`  includeInvalid: false:         ${validOnly.data.length}`);
+}
+
 async function main(): Promise<void> {
   await getMappings();
+  await mapToSpecificVocabulary();
+  await getEveryMapping();
+  await valueAsConcept();
+  await excludeInvalid();
   await mapConcepts();
   await mapByNativeCode();
   await lookupByCode();

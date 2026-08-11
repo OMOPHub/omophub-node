@@ -33,7 +33,7 @@ npx tsx examples/fhir-resolver.ts
 | [`error-handling.ts`](./error-handling.ts) | Discriminated `{ data, error }` pattern, every error code, iterator vs. eager error modes, `OMOPHubError` on misuse |
 | [`search-concepts.ts`](./search-concepts.ts) | basic / filtered / autocomplete / semantic / bulk / similar + async iterator pagination |
 | [`navigate-hierarchy.ts`](./navigate-hierarchy.ts) | `hierarchy.ancestors`, `hierarchy.descendants`, `hierarchy.get` (graph format), `relationships.get` |
-| [`map-between-vocabularies.ts`](./map-between-vocabularies.ts) | `mappings.get`, `mappings.map` (concepts + native codes), code-lookup-then-map |
+| [`map-between-vocabularies.ts`](./map-between-vocabularies.ts) | `mappings.get` / `getIter` / `getAll`, `relationshipIds` (Value-as-Concept), `includeInvalid`, `mappings.map` (concepts + native codes), code-lookup-then-map |
 | [`fhir-resolver.ts`](./fhir-resolver.ts) | SNOMED/LOINC/RxNorm/ICD-10-CM resolution, recommendations, quality, batch, CodeableConcept, coding-object form, `omophubFhirUrl` |
 
 ## SDK conventions used throughout
