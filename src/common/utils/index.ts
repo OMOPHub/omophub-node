@@ -7,6 +7,9 @@ export {
   normaliseSemanticSearchData,
 } from './normalize-search-response.js';
 export {
+  derivePagination,
+  ITER_DEFAULT_PAGE_SIZE,
+  type MissingMetaPolicy,
   type PageFetcher,
   type PaginateAllResult,
   paginate,

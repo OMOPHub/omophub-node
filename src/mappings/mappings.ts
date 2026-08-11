@@ -3,7 +3,13 @@ import type { GetOptions } from '../common/interfaces/get-options.js';
 import type { PaginateOptions } from '../common/interfaces/paginate-options.js';
 import type { PaginatedData } from '../common/interfaces/pagination.js';
 import type { PostOptions } from '../common/interfaces/post-options.js';
-import { type PaginateAllResult, paginate, paginateAll } from '../common/utils/paginate.js';
+import {
+  derivePagination,
+  ITER_DEFAULT_PAGE_SIZE,
+  type PaginateAllResult,
+  paginate,
+  paginateAll,
+} from '../common/utils/paginate.js';
 import { syntheticError } from '../common/utils/synthetic-error.js';
 import { toSnakeCaseKeys } from '../common/utils/to-snake-case.js';
 import type { Response as OMOPHubResponse } from '../interfaces.js';
@@ -11,31 +17,13 @@ import type { GetMappingsOptions } from './interfaces/get-mappings-options.js';
 import type { MapConceptsOptions } from './interfaces/map-concepts-options.js';
 import type { MapConceptsResult, Mapping, MappingsListResult } from './interfaces/mapping.js';
 
-/** Matches the search resource's iterator default. */
-const ITER_DEFAULT_PAGE_SIZE = 100;
-
 /**
- * Falls back to a derived page when the server omits `meta.pagination`
- * (older deployments predating mappings pagination), so the iterators
- * terminate rather than loop.
+ * The server clamps `page_size` to this on the mappings endpoint and does not
+ * say that it did. The iterators clamp before asking, so that a "full page"
+ * means what the fallback in `derivePagination` assumes it means — asking for
+ * 500 and getting 200 would otherwise read as a short page, i.e. the end.
  */
-function derivePagination(
-  response: OMOPHubResponse<unknown>,
-  page: number,
-  pageSize: number,
-  actualCount: number,
-) {
-  const fromMeta = response.meta?.pagination;
-  if (fromMeta) return fromMeta;
-  return {
-    page,
-    page_size: pageSize,
-    total_items: actualCount,
-    total_pages: actualCount < pageSize ? page : page + 1,
-    has_next: actualCount >= pageSize,
-    has_previous: page > 1,
-  };
-}
+const MAX_PAGE_SIZE = 200;
 
 export class Mappings {
   constructor(private readonly client: OMOPHub) {}
@@ -74,7 +62,7 @@ export class Mappings {
   ): AsyncGenerator<Mapping> {
     const { maxPages, pageSize, ...rest } = options;
     return paginate<Mapping>((page, size) => this.#fetchPage(conceptId, rest, page, size), {
-      pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE,
+      pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE),
       maxPages,
     });
   }
@@ -90,7 +78,7 @@ export class Mappings {
   ): Promise<PaginateAllResult<Mapping>> {
     const { maxPages, pageSize, ...rest } = options;
     return paginateAll<Mapping>((page, size) => this.#fetchPage(conceptId, rest, page, size), {
-      pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE,
+      pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE),
       maxPages,
     });
   }
@@ -113,7 +101,14 @@ export class Mappings {
       ...r,
       data: {
         data: r.data.mappings ?? [],
-        meta: { pagination: derivePagination(r, page, size, r.data.mappings?.length ?? 0) },
+        meta: {
+          // 'single-page': a mappings response with no `meta.pagination` comes
+          // from a deployment predating 2026-08-04, whose query was
+          // `LIMIT 100` with no OFFSET. It ignores `page`, so inferring
+          // "a full page means there is more" would re-fetch the same 100 rows
+          // forever instead of terminating.
+          pagination: derivePagination(r, page, size, r.data.mappings?.length ?? 0, 'single-page'),
+        },
       },
     };
   }

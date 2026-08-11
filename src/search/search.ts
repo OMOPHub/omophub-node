@@ -6,7 +6,13 @@ import {
   normaliseBasicSearchData,
   normaliseSemanticSearchData,
 } from '../common/utils/normalize-search-response.js';
-import { type PaginateAllResult, paginate, paginateAll } from '../common/utils/paginate.js';
+import {
+  derivePagination,
+  ITER_DEFAULT_PAGE_SIZE,
+  type PaginateAllResult,
+  paginate,
+  paginateAll,
+} from '../common/utils/paginate.js';
 import { syntheticError } from '../common/utils/synthetic-error.js';
 import { toSnakeCaseKeys } from '../common/utils/to-snake-case.js';
 import type { Concept } from '../concepts/interfaces/concept.js';
@@ -31,7 +37,13 @@ import type {
 import type { SimilarSearchOptions } from './interfaces/similar-search-options.js';
 import type { SimilarSearchResult } from './interfaces/similar-search-result.js';
 
-const ITER_DEFAULT_PAGE_SIZE = 100;
+/**
+ * `/v1/search/semantic` validates `page_size` at `max: 100` — stricter than the
+ * router-wide clamp of 200, and it *rejects* rather than clamping. Asking for
+ * more used to 400 every page, so `semanticIter` / `semanticAll` returned
+ * nothing at all instead of walking with a smaller page.
+ */
+const SEMANTIC_MAX_PAGE_SIZE = 100;
 
 export class Search {
   constructor(private readonly client: OMOPHub) {}
@@ -228,7 +240,7 @@ export class Search {
           },
         };
       },
-      { pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE, maxPages },
+      { pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, SEMANTIC_MAX_PAGE_SIZE), maxPages },
     );
   }
 
@@ -253,7 +265,7 @@ export class Search {
           },
         };
       },
-      { pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE, maxPages },
+      { pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, SEMANTIC_MAX_PAGE_SIZE), maxPages },
     );
   }
 
@@ -340,27 +352,4 @@ export class Search {
     const body = toSnakeCaseKeys(options);
     return this.client.post<SimilarSearchResult>('/search/similar', body, requestOptions);
   }
-}
-
-/**
- * Best-effort pagination metadata for endpoints that don't return one
- * (e.g. semantic search). When `actualCount < pageSize` we infer
- * end-of-results — same heuristic Python's `paginate_all()` uses.
- */
-function derivePagination(
-  response: OMOPHubResponse<unknown>,
-  page: number,
-  pageSize: number,
-  actualCount: number,
-) {
-  const fromMeta = response.meta?.pagination;
-  if (fromMeta) return fromMeta;
-  return {
-    page,
-    page_size: pageSize,
-    total_items: actualCount,
-    total_pages: actualCount < pageSize ? page : page + 1,
-    has_next: actualCount >= pageSize,
-    has_previous: page > 1,
-  };
 }

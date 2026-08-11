@@ -47,12 +47,143 @@ describe('client.mappings.get', () => {
     expect(url).toContain('vocab_release=2025.1');
   });
 
+  test('comma-joins relationshipIds, and omits it when unset', async () => {
+    // Value-as-Concept is unreachable without this: the server defaults to
+    // `Maps to` alone, so a composite concept returns only half its
+    // decomposition unless `Maps to value` is asked for too.
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { mappings: [] });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.mappings.get(4_167_462);
+    expect(lastCall(fetchMock).url).not.toContain('relationship_ids');
+
+    enqueueSuccess(fetchMock, { mappings: [] });
+    await client.mappings.get(4_167_462, {
+      relationshipIds: ['Maps to', 'Maps to value'],
+    });
+    const { url } = lastCall(fetchMock);
+    expect(new URL(url).searchParams.get('relationship_ids')).toBe('Maps to,Maps to value');
+  });
+
+  test('getAll forwards relationshipIds to every page', async () => {
+    const fetchMock = createMockFetch();
+    enqueueMappingsPage(fetchMock, [1], { page: 1, total_pages: 2, has_next: true });
+    enqueueMappingsPage(fetchMock, [2], { page: 2, total_pages: 2, has_next: false });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.mappings.getAll(4_167_462, {
+      relationshipIds: ['Maps to', 'Maps to value'],
+    });
+
+    for (const call of fetchMock.mock.calls) {
+      const url = new URL(String(call[0]));
+      expect(url.searchParams.get('relationship_ids')).toBe('Maps to,Maps to value');
+    }
+  });
+
   test('returns ErrorResponse on 404', async () => {
     const fetchMock = createMockFetch();
     enqueueError(fetchMock, 404, mockApiErrorBody('not_found', 'no mappings'));
     const client = new OMOPHub('oh_test', { fetch: fetchMock, maxRetries: 0 });
     const { error } = await client.mappings.get(9_999_999);
     expect(error?.name).toBe('not_found');
+  });
+});
+
+describe('client.mappings against a server that omits meta.pagination', () => {
+  /**
+   * Answers every request with the same full page and no `meta.pagination`,
+   * counting calls. Models a pre-2026-08-04 deployment, whose query was
+   * `LIMIT 100` with no OFFSET: it ignores `page` entirely.
+   *
+   * Throws past `maxCalls` so a non-terminating walk fails the test instead
+   * of hanging the suite.
+   */
+  function legacyServer(rowCount: number, maxCalls = 5) {
+    let calls = 0;
+    const fetchMock = createMockFetch();
+    fetchMock.mockImplementation(async () => {
+      calls++;
+      if (calls > maxCalls) throw new Error(`did not terminate: ${calls} requests`);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: {
+            mappings: Array.from({ length: rowCount }, (_, i) => ({
+              source_concept_id: DIABETES_CONCEPT_ID,
+              target_concept_id: 1000 + i,
+              relationship_id: 'Maps to',
+            })),
+          },
+          meta: { request_id: 'req_legacy' },
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      );
+    });
+    return { fetchMock, calls: () => calls };
+  }
+
+  test('getAll stops after one page instead of looping forever', async () => {
+    // A full page used to imply "there is more", so page 2 re-fetched the
+    // identical 100 rows and the walk never ended.
+    const { fetchMock, calls } = legacyServer(100);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    const result = await client.mappings.getAll(DIABETES_CONCEPT_ID);
+
+    expect(calls()).toBe(1);
+    expect(result.pagesFetched).toBe(1);
+    expect(result.data).toHaveLength(100);
+    // No duplicates — the old loop yielded the same rows on every pass.
+    expect(new Set(result.data.map((m) => m.target_concept_id)).size).toBe(100);
+  });
+
+  test('getIter terminates instead of yielding the same rows forever', async () => {
+    const { fetchMock, calls } = legacyServer(100);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    const seen: number[] = [];
+    for await (const m of client.mappings.getIter(DIABETES_CONCEPT_ID)) {
+      seen.push(m.target_concept_id);
+    }
+
+    expect(calls()).toBe(1);
+    expect(seen).toHaveLength(100);
+  });
+
+  test('a short page still terminates', async () => {
+    const { fetchMock, calls } = legacyServer(7);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    const result = await client.mappings.getAll(DIABETES_CONCEPT_ID);
+
+    expect(calls()).toBe(1);
+    expect(result.data).toHaveLength(7);
+  });
+});
+
+describe('client.mappings iterator page size', () => {
+  test('clamps a requested pageSize above the server ceiling to 200', async () => {
+    // The server silently clamps to 200. Asking for 500 and receiving 200 would
+    // otherwise read as a short page — i.e. the end — and truncate the walk.
+    const fetchMock = createMockFetch();
+    enqueueMappingsPage(fetchMock, [1], { page: 1, total_pages: 1, has_next: false });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.mappings.getAll(DIABETES_CONCEPT_ID, { pageSize: 500 });
+
+    expect(new URL(lastCall(fetchMock).url).searchParams.get('page_size')).toBe('200');
+  });
+
+  test('leaves a page size under the ceiling alone', async () => {
+    const fetchMock = createMockFetch();
+    enqueueMappingsPage(fetchMock, [1], { page: 1, total_pages: 1, has_next: false });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.mappings.getAll(DIABETES_CONCEPT_ID, { pageSize: 50 });
+
+    expect(new URL(lastCall(fetchMock).url).searchParams.get('page_size')).toBe('50');
   });
 });
 
