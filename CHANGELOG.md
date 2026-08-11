@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Changed
 
 - `derivePagination` and `ITER_DEFAULT_PAGE_SIZE` hoisted from `src/search/search.ts` into `src/common/utils/paginate.ts` and shared by both resources, replacing a verbatim copy. What to assume when `meta.pagination` is absent is now an explicit `MissingMetaPolicy` argument rather than a hardcoded guess: search keeps `'more-if-page-full'`, mappings uses `'single-page'`. The two are not interchangeable, and the failure is asymmetric — guessing "there is more" against a server that ignores `page` never terminates, while guessing "that was everything" only stops early.
+- `derivePagination`'s `policy` argument is **required**, not defaulted. A default hands out `'more-if-page-full'` — the option that never terminates against a server ignoring `page` — so a new resource would inherit the unsafe behaviour silently, which is how the mappings loop happened. Every call site now states its assumption and the compiler enforces it. Search passes `'more-if-page-full'` explicitly: `/v1/search/concepts` has returned real pagination since the initial commit and `/v1/search/semantic` passes `page` through to the search service.
 
 - `PaginateOptions` moved from `src/search/interfaces/` to `src/common/interfaces/` now that more than one resource iterates. The exported type name and its export from the package root are unchanged; only the internal path moved.
 

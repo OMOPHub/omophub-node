@@ -121,13 +121,19 @@ export type MissingMetaPolicy = 'more-if-page-full' | 'single-page';
  * absence, and getting that wrong is not symmetric: guessing "there is more"
  * against a server that ignores `page` re-fetches the same rows forever,
  * whereas guessing "that was everything" merely stops early.
+ *
+ * `policy` is deliberately REQUIRED rather than defaulted. The unsafe option
+ * is the one a default would hand out, so a new resource must state which
+ * assumption it is making about its endpoint instead of inheriting one — the
+ * mappings iterators looped forever precisely because that assumption was
+ * implicit.
  */
 export function derivePagination(
   response: OMOPHubResponse<unknown>,
   page: number,
   pageSize: number,
   actualCount: number,
-  policy: MissingMetaPolicy = 'more-if-page-full',
+  policy: MissingMetaPolicy,
 ) {
   const fromMeta = response.meta?.pagination;
   if (fromMeta) return fromMeta;

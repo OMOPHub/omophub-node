@@ -97,7 +97,21 @@ export class Search {
           ...r,
           data: {
             data: r.data.concepts,
-            meta: { pagination: derivePagination(r, page, size, r.data.concepts.length) },
+            meta: {
+              // 'more-if-page-full': this endpoint has returned real pagination
+              // (createPaginatedResponse over LIMIT/OFFSET) since the initial
+              // commit, and honours `page` — verified against production
+              // 2026-08-11, where page 2 returns different concept_ids. So the
+              // fallback is unreachable in practice, and if some older
+              // deployment did omit the meta block it would still page.
+              pagination: derivePagination(
+                r,
+                page,
+                size,
+                r.data.concepts.length,
+                'more-if-page-full',
+              ),
+            },
           },
         };
       },
@@ -122,7 +136,21 @@ export class Search {
           ...r,
           data: {
             data: r.data.concepts,
-            meta: { pagination: derivePagination(r, page, size, r.data.concepts.length) },
+            meta: {
+              // 'more-if-page-full': this endpoint has returned real pagination
+              // (createPaginatedResponse over LIMIT/OFFSET) since the initial
+              // commit, and honours `page` — verified against production
+              // 2026-08-11, where page 2 returns different concept_ids. So the
+              // fallback is unreachable in practice, and if some older
+              // deployment did omit the meta block it would still page.
+              pagination: derivePagination(
+                r,
+                page,
+                size,
+                r.data.concepts.length,
+                'more-if-page-full',
+              ),
+            },
           },
         };
       },
@@ -236,7 +264,14 @@ export class Search {
           ...r,
           data: {
             data: results,
-            meta: { pagination: derivePagination(r, page, size, results.length) },
+            meta: {
+              // 'more-if-page-full': /v1/search/semantic passes `page` through
+              // to the search service and returns `meta.pagination` on every
+              // response — verified against production 2026-08-11, where page 2
+              // returns different concept_ids. Unlike the pre-2026-08-04
+              // mappings endpoint, it has never had a page-ignoring form.
+              pagination: derivePagination(r, page, size, results.length, 'more-if-page-full'),
+            },
           },
         };
       },
@@ -261,7 +296,14 @@ export class Search {
           ...r,
           data: {
             data: results,
-            meta: { pagination: derivePagination(r, page, size, results.length) },
+            meta: {
+              // 'more-if-page-full': /v1/search/semantic passes `page` through
+              // to the search service and returns `meta.pagination` on every
+              // response — verified against production 2026-08-11, where page 2
+              // returns different concept_ids. Unlike the pre-2026-08-04
+              // mappings endpoint, it has never had a page-ignoring form.
+              pagination: derivePagination(r, page, size, results.length, 'more-if-page-full'),
+            },
           },
         };
       },
