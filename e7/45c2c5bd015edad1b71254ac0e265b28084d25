@@ -1,0 +1,30 @@
+CHANGELOG.md
+  h_70ae365dc0c3d1 25
+src/common/utils/paginate.ts
+  s_675010497a6bc7::t_1af8304f2d4f8e 124-129,136
+src/search/search.ts
+  s_675010497a6bc7::t_a431503a7ce767 100-114,139-153,267-274,299-306
+test/common/utils/paginate.test.ts
+  s_675010497a6bc7::t_58a45a47fb4dd9 2,167-208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e745c2c5bd015edad1b71254ac0e265b28084d25",
+  "prompts": {},
+  "humans": {
+    "h_70ae365dc0c3d1": {
+      "author": "alex-omophub <sdk@omophub.com>"
+    }
+  },
+  "sessions": {
+    "s_675010497a6bc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ac8e644b-8ae2-49d5-94a0-66989382a45d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
