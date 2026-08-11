@@ -1,0 +1,23 @@
+README.md
+  s_675010497a6bc7::t_b7a6c282def362 341
+examples/README.md
+  s_675010497a6bc7::t_c15a97d0bca4bc 36
+examples/map-between-vocabularies.ts
+  s_675010497a6bc7::t_5f2c1d98d6bc87 13,15-18,24,26-58,142-207,210-213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9ce2d994a133b8177444bcad7110fdadc15af1f1",
+  "prompts": {},
+  "sessions": {
+    "s_675010497a6bc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ac8e644b-8ae2-49d5-94a0-66989382a45d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
