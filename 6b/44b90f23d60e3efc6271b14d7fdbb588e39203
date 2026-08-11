@@ -1,0 +1,42 @@
+CHANGELOG.md
+  h_70ae365dc0c3d1 7-21,38
+package.json
+  s_675010497a6bc7::t_73bc326fe0d157 3
+src/common/interfaces/index.ts
+  s_675010497a6bc7::t_61d77ebe3067b7 8
+src/index.ts
+  s_675010497a6bc7::t_162f41322d3c80 11
+src/mappings/interfaces/get-mappings-options.ts
+  s_675010497a6bc7::t_e70e5f28b4f659 1,4
+src/mappings/mappings.ts
+  s_675010497a6bc7::t_99cc88939addb1 3-4,6,12-38,46-52,67-120
+src/search/search.ts
+  s_675010497a6bc7::t_009592cd34b2ab 3
+src/version.ts
+  s_675010497a6bc7::t_ba19ef3473bb28 5
+test/mappings/mappings.test.ts
+  s_675010497a6bc7::t_86fd1f7d575e27 3-31,59-146
+package-lock.json
+  h_70ae365dc0c3d1 3,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6b44b90f23d60e3efc6271b14d7fdbb588e39203",
+  "prompts": {},
+  "humans": {
+    "h_70ae365dc0c3d1": {
+      "author": "alex-omophub <sdk@omophub.com>"
+    }
+  },
+  "sessions": {
+    "s_675010497a6bc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ac8e644b-8ae2-49d5-94a0-66989382a45d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
