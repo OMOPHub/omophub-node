@@ -44,18 +44,42 @@ async function mapToSpecificVocabulary(): Promise<void> {
 
   const conceptId = 201826;
 
-  const { data: empty } = await client.mappings.get(conceptId, {
+  // Check `error` before reading the count. A failed request yields no rows,
+  // which would print as "0 rows (as expected)" — i.e. exactly the conclusion
+  // this section exists to teach, reached for entirely the wrong reason.
+  const { data: empty, error: emptyError } = await client.mappings.get(conceptId, {
     targetVocabulary: 'ICD10CM',
   });
-  console.log(`  'Maps to' + ICD10CM:     ${empty?.mappings.length ?? 0} rows (as expected)`);
+  if (emptyError) {
+    console.log(`  'Maps to' + ICD10CM:     request failed — ${emptyError.message}`);
+  } else {
+    console.log(`  'Maps to' + ICD10CM:     ${empty.mappings.length} rows (as expected)`);
+  }
 
+  // getAll accumulates errors rather than throwing, so a partial walk looks
+  // like a complete one unless you look.
   const icd = await client.mappings.getAll(conceptId, {
     relationshipIds: ['Mapped from'],
     targetVocabulary: 'ICD10CM',
   });
+  const [icdError] = icd.errors;
+  if (icdError) {
+    console.log(`  'Mapped from' + ICD10CM: INCOMPLETE — ${icdError.message}`);
+    return;
+  }
   console.log(`  'Mapped from' + ICD10CM: ${icd.data.length} rows`);
+
+  // The mapping row has the target's id and name but not its code, so resolve
+  // the first few. One request each — fine for five rows, not for all 74.
   for (const m of icd.data.slice(0, 5)) {
-    console.log(`    ← ${m.target_concept_id} ${m.target_concept_name}`);
+    const { data: target, error: targetErr } = await client.concepts.get(m.target_concept_id);
+    if (targetErr) {
+      console.log(`    ← ${m.target_concept_id} (code lookup failed: ${targetErr.message})`);
+      continue;
+    }
+    console.log(
+      `    ← [${target.vocabulary_id}] ${target.concept_code} ${target.concept_name}`,
+    );
   }
 }
 
@@ -156,14 +180,18 @@ async function getEveryMapping(): Promise<void> {
   const { data, errors, pagesFetched } = await client.mappings.getAll(conceptId);
   const [firstError] = errors;
   if (firstError) {
+    // Errors are values here, not exceptions, so a partial result looks
+    // exactly like a complete one unless you check.
     console.log(`  Incomplete — ${errors.length} page(s) failed: ${firstError.message}`);
+    return;
   }
   console.log(`  ${data.length} mappings across ${pagesFetched} page(s)`);
 
-  // Streaming: same walk, one mapping at a time, without holding them all.
-  let count = 0;
-  for await (const _m of client.mappings.getIter(conceptId)) count++;
-  console.log(`  getIter yielded the same ${count}`);
+  // `getIter` is the streaming half of the same walk — one mapping at a time,
+  // without holding them all. Use one or the other; running both would page
+  // the whole set twice. It throws on a failed page rather than accumulating.
+  //
+  //   for await (const m of client.mappings.getIter(conceptId)) { ... }
 }
 
 /**
@@ -200,6 +228,14 @@ async function excludeInvalid(): Promise<void> {
   const conceptId = 201826;
   const withInvalid = await client.mappings.getAll(conceptId);
   const validOnly = await client.mappings.getAll(conceptId, { includeInvalid: false });
+
+  // Comparing two counts is only meaningful if both walks completed — a failed
+  // page would show up as a difference that looks like a filtering effect.
+  const [failed] = [...withInvalid.errors, ...validOnly.errors];
+  if (failed) {
+    console.log(`  Cannot compare — a walk failed: ${failed.message}`);
+    return;
+  }
 
   console.log(`  default (includes deprecated): ${withInvalid.data.length}`);
   console.log(`  includeInvalid: false:         ${validOnly.data.length}`);
