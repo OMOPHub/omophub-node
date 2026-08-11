@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { paginate, paginateAll } from '../../../src/common/utils/paginate.js';
+import { derivePagination, paginate, paginateAll } from '../../../src/common/utils/paginate.js';
 import { OMOPHubIteratorError } from '../../../src/errors.js';
 import type { Response as OMOPHubResponse } from '../../../src/interfaces.js';
 
@@ -162,5 +162,47 @@ describe('hasNextPage — outer envelope pagination', () => {
     const result = await paginateAll<string>(fetchPage, { pageSize: 2 });
     expect(result.data).toEqual(['a', 'b', 'c']);
     expect(result.pagesFetched).toBe(2);
+  });
+});
+
+describe('derivePagination', () => {
+  const noMeta = { meta: null } as unknown as OMOPHubResponse<unknown>;
+  const withMeta = {
+    meta: {
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total_items: 3,
+        total_pages: 1,
+        has_next: false,
+        has_previous: false,
+      },
+    },
+  } as unknown as OMOPHubResponse<unknown>;
+
+  test("the server's own pagination always wins over either policy", () => {
+    for (const policy of ['more-if-page-full', 'single-page'] as const) {
+      // Page looks full (10 of 10) but the server says there is no next page.
+      expect(derivePagination(withMeta, 1, 10, 10, policy).has_next).toBe(false);
+    }
+  });
+
+  test("'single-page' never claims another page, even on a full page", () => {
+    // This is what stops a page-ignoring server from being walked forever.
+    const p = derivePagination(noMeta, 1, 100, 100, 'single-page');
+    expect(p.has_next).toBe(false);
+    expect(p.total_pages).toBe(1);
+  });
+
+  test("'more-if-page-full' infers another page from a full one", () => {
+    expect(derivePagination(noMeta, 1, 100, 100, 'more-if-page-full').has_next).toBe(true);
+    expect(derivePagination(noMeta, 1, 100, 99, 'more-if-page-full').has_next).toBe(false);
+  });
+
+  test('policy is required, so no call site can inherit the unsafe option', () => {
+    // A default would hand out 'more-if-page-full' — the option that loops
+    // forever against a server ignoring `page`. Compile-time enforced; this
+    // asserts the runtime signature matches so the guarantee is not just types.
+    expect(derivePagination.length).toBe(5);
   });
 });

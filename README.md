@@ -338,7 +338,7 @@ export async function GET(req: Request) {
 | `search` | Full-text and semantic search | `basic()`, `advanced()`, `semantic()`, `similar()`, `bulkBasic()`, `bulkSemantic()`, plus `*Iter` / `*All` |
 | `hierarchy` | Navigate concept relationships | `get()`, `ancestors()`, `descendants()` |
 | `relationships` | Concept relationship lookup | `get()`, `types()` |
-| `mappings` | Cross-vocabulary mappings | `get()`, `map()` |
+| `mappings` | Cross-vocabulary mappings | `get()`, `getIter()`, `getAll()`, `map()` |
 | `vocabularies` | Vocabulary metadata | `list()`, `get()`, `stats()`, `domainStats()`, `domains()`, `conceptClasses()`, `concepts()` |
 | `domains` | Domain catalog | `list()`, `concepts()` |
 | `fhir` | FHIR-to-OMOP resolution | `resolve()`, `resolveBatch()`, `resolveCodeableConcept()` |

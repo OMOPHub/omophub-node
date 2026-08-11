@@ -16,11 +16,18 @@ export interface MappingContext {
 /**
  * Single mapping row returned by `mappings.get` / `mappings.map`.
  *
- * Minimum live-API shape: `{ source_concept_id, source_concept_name,
- * target_concept_id, target_concept_name, relationship_id }`. The
- * remaining `source_*` / `target_*` metadata fields and `confidence`
- * are populated when the server has them expanded (e.g. when
- * `targetVocabulary` was supplied or the row carries a mapping score).
+ * The optional fields are optional because this type is shared by two
+ * endpoints that populate different subsets — not because the server
+ * decides case by case:
+ *
+ * - `mappings.get` (`GET /concepts/{id}/mappings`) returns exactly
+ *   `{ source_concept_id, source_concept_name, target_concept_id,
+ *   target_concept_name, relationship_id, confidence }`. Supplying
+ *   `targetVocabulary` does NOT add the vocabulary/code fields —
+ *   measured against production 2026-08-12. Resolve a target's
+ *   vocabulary and code with `concepts.get(target_concept_id)`.
+ * - `mappings.map` (`POST /mappings/map`) additionally returns
+ *   `source_*` / `target_*` `vocabulary_id` and `concept_code`.
  */
 export interface Mapping {
   source_concept_id: number;

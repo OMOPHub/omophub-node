@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-11
+
+### Added
+
+- `GetMappingsOptions` extends `PaginationOptions`, so `mappings.get()` accepts `page` and `pageSize`. `GET /v1/concepts/{id}/mappings` became paginated on 2026-08-04; before that it applied a fixed `LIMIT 100` server-side with no total and no `has_next`, so a concept with 1,500 mappings returned 100 of them and nothing said so. `pageSize` defaults to 100 server-side, matching the old cap, so an existing call returns exactly the page it returned before - now with `meta.pagination` alongside it.
+- `mappings.getIter()` and `mappings.getAll()`, matching the `basicIter` / `basicAll` pattern on the search resource. Prefer these when assembling a code list: they follow `has_next` to the end rather than trusting one page. `getIter` throws `OMOPHubIteratorError` on a failed page; `getAll` accumulates errors as values so a partial result is distinguishable from a complete one.
+
+- `GetMappingsOptions.relationshipIds` - relationship types to return, comma-joined onto the query string. The server defaults to `['Maps to']`, so a composite concept returns only half its decomposition unless `'Maps to value'` is asked for too: "Allergy to penicillin G" maps to "Allergy to drug" via `Maps to` and to "penicillin G" via `Maps to value`. The parameter existed on the endpoint but was ignored server-side until 2026-08-11, so there was nothing to expose before now.
+
+### Fixed
+
+- `mappings.getIter()` / `getAll()` no longer loop forever against a deployment that omits `meta.pagination`. Such a server predates 2026-08-04, when the query was `LIMIT 100` with **no OFFSET** — it ignores `page` and returns the same first rows for every request. The fallback inferred "a full page means there is more", so a concept with 100+ mappings re-fetched the identical page indefinitely, yielding duplicates and, in `getAll`, growing the array without bound. A response with no pagination metadata is now treated as the whole of what that server will give us.
+- `mappings.getIter()` / `getAll()` clamp `pageSize` to the endpoint's 200 ceiling before requesting. The server clamps silently, so asking for 500 and receiving 200 read as a short page — i.e. the end — and truncated the walk on servers that omit pagination metadata.
+- `search.semanticIter()` / `semanticAll()` clamp `pageSize` to the endpoint's ceiling of 100. `/v1/search/semantic` validates `page_size` at `max: 100` and **rejects** rather than clamping — unlike every other paginated endpoint, where the router-wide middleware silently clamps to 200. So `semanticAll('diabetes', { pageSize: 200 })` 400'd on its first page and returned zero results with one error, rather than walking with a smaller page. `basicIter` / `basicAll` are deliberately not clamped — that endpoint returns a truthful `meta.pagination`, so a server-side clamp only yields smaller pages and the walk still terminates correctly.
+
+### Changed
+
+- `derivePagination` and `ITER_DEFAULT_PAGE_SIZE` hoisted from `src/search/search.ts` into `src/common/utils/paginate.ts` and shared by both resources, replacing a verbatim copy. What to assume when `meta.pagination` is absent is now an explicit `MissingMetaPolicy` argument rather than a hardcoded guess: search keeps `'more-if-page-full'`, mappings uses `'single-page'`. The two are not interchangeable, and the failure is asymmetric — guessing "there is more" against a server that ignores `page` never terminates, while guessing "that was everything" only stops early.
+- `derivePagination`'s `policy` argument is **required**, not defaulted. A default hands out `'more-if-page-full'` — the option that never terminates against a server ignoring `page` — so a new resource would inherit the unsafe behaviour silently, which is how the mappings loop happened. Every call site now states its assumption and the compiler enforces it. Search passes `'more-if-page-full'` explicitly: `/v1/search/concepts` has returned real pagination since the initial commit and `/v1/search/semantic` passes `page` through to the search service.
+
+- `PaginateOptions` moved from `src/search/interfaces/` to `src/common/interfaces/` now that more than one resource iterates. The exported type name and its export from the package root are unchanged; only the internal path moved.
+
+### Notes
+
+- The server clamps `page_size` to 200 on this endpoint and does not report having done so, so a larger value silently yields a smaller page.
+
 ## [1.0.3] - 2026-06-13
 
 ### Changed
@@ -20,7 +46,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Changed
 
-- `client.search.semantic()` now calls the canonical path `GET /v1/search/semantic` instead of `GET /v1/concepts/semantic-search`. The legacy path remains a permanent server-side alias, so older SDK installations continue to work — no breaking change. The `User-Agent` and `__version__` are bumped to `1.0.1`.
+- `client.search.semantic()` now calls the canonical path `GET /v1/search/semantic` instead of `GET /v1/concepts/semantic-search`. The legacy path remains a permanent server-side alias, so older SDK installations continue to work - no breaking change. The `User-Agent` and `__version__` are bumped to `1.0.1`.
 
 ### Fixed
 

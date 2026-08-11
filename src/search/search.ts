@@ -1,11 +1,18 @@
 import type { OMOPHub } from '../client.js';
 import type { GetOptions } from '../common/interfaces/get-options.js';
+import type { PaginateOptions } from '../common/interfaces/paginate-options.js';
 import type { PostOptions } from '../common/interfaces/post-options.js';
 import {
   normaliseBasicSearchData,
   normaliseSemanticSearchData,
 } from '../common/utils/normalize-search-response.js';
-import { type PaginateAllResult, paginate, paginateAll } from '../common/utils/paginate.js';
+import {
+  derivePagination,
+  ITER_DEFAULT_PAGE_SIZE,
+  type PaginateAllResult,
+  paginate,
+  paginateAll,
+} from '../common/utils/paginate.js';
 import { syntheticError } from '../common/utils/synthetic-error.js';
 import { toSnakeCaseKeys } from '../common/utils/to-snake-case.js';
 import type { Concept } from '../concepts/interfaces/concept.js';
@@ -21,7 +28,6 @@ import type {
   BulkSemanticSearchResponse,
 } from './interfaces/bulk-search.js';
 import type { BulkSemanticOptions } from './interfaces/bulk-semantic-options.js';
-import type { PaginateOptions } from './interfaces/paginate-options.js';
 import type { AutocompleteResult, SearchResult } from './interfaces/search-result.js';
 import type { SemanticSearchOptions } from './interfaces/semantic-search-options.js';
 import type {
@@ -31,7 +37,13 @@ import type {
 import type { SimilarSearchOptions } from './interfaces/similar-search-options.js';
 import type { SimilarSearchResult } from './interfaces/similar-search-result.js';
 
-const ITER_DEFAULT_PAGE_SIZE = 100;
+/**
+ * `/v1/search/semantic` validates `page_size` at `max: 100` — stricter than the
+ * router-wide clamp of 200, and it *rejects* rather than clamping. Asking for
+ * more used to 400 every page, so `semanticIter` / `semanticAll` returned
+ * nothing at all instead of walking with a smaller page.
+ */
+const SEMANTIC_MAX_PAGE_SIZE = 100;
 
 export class Search {
   constructor(private readonly client: OMOPHub) {}
@@ -85,7 +97,21 @@ export class Search {
           ...r,
           data: {
             data: r.data.concepts,
-            meta: { pagination: derivePagination(r, page, size, r.data.concepts.length) },
+            meta: {
+              // 'more-if-page-full': this endpoint has returned real pagination
+              // (createPaginatedResponse over LIMIT/OFFSET) since the initial
+              // commit, and honours `page` — verified against production
+              // 2026-08-11, where page 2 returns different concept_ids. So the
+              // fallback is unreachable in practice, and if some older
+              // deployment did omit the meta block it would still page.
+              pagination: derivePagination(
+                r,
+                page,
+                size,
+                r.data.concepts.length,
+                'more-if-page-full',
+              ),
+            },
           },
         };
       },
@@ -110,7 +136,21 @@ export class Search {
           ...r,
           data: {
             data: r.data.concepts,
-            meta: { pagination: derivePagination(r, page, size, r.data.concepts.length) },
+            meta: {
+              // 'more-if-page-full': this endpoint has returned real pagination
+              // (createPaginatedResponse over LIMIT/OFFSET) since the initial
+              // commit, and honours `page` — verified against production
+              // 2026-08-11, where page 2 returns different concept_ids. So the
+              // fallback is unreachable in practice, and if some older
+              // deployment did omit the meta block it would still page.
+              pagination: derivePagination(
+                r,
+                page,
+                size,
+                r.data.concepts.length,
+                'more-if-page-full',
+              ),
+            },
           },
         };
       },
@@ -224,11 +264,18 @@ export class Search {
           ...r,
           data: {
             data: results,
-            meta: { pagination: derivePagination(r, page, size, results.length) },
+            meta: {
+              // 'more-if-page-full': /v1/search/semantic passes `page` through
+              // to the search service and returns `meta.pagination` on every
+              // response — verified against production 2026-08-11, where page 2
+              // returns different concept_ids. Unlike the pre-2026-08-04
+              // mappings endpoint, it has never had a page-ignoring form.
+              pagination: derivePagination(r, page, size, results.length, 'more-if-page-full'),
+            },
           },
         };
       },
-      { pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE, maxPages },
+      { pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, SEMANTIC_MAX_PAGE_SIZE), maxPages },
     );
   }
 
@@ -249,11 +296,18 @@ export class Search {
           ...r,
           data: {
             data: results,
-            meta: { pagination: derivePagination(r, page, size, results.length) },
+            meta: {
+              // 'more-if-page-full': /v1/search/semantic passes `page` through
+              // to the search service and returns `meta.pagination` on every
+              // response — verified against production 2026-08-11, where page 2
+              // returns different concept_ids. Unlike the pre-2026-08-04
+              // mappings endpoint, it has never had a page-ignoring form.
+              pagination: derivePagination(r, page, size, results.length, 'more-if-page-full'),
+            },
           },
         };
       },
-      { pageSize: pageSize ?? ITER_DEFAULT_PAGE_SIZE, maxPages },
+      { pageSize: Math.min(pageSize ?? ITER_DEFAULT_PAGE_SIZE, SEMANTIC_MAX_PAGE_SIZE), maxPages },
     );
   }
 
@@ -340,27 +394,4 @@ export class Search {
     const body = toSnakeCaseKeys(options);
     return this.client.post<SimilarSearchResult>('/search/similar', body, requestOptions);
   }
-}
-
-/**
- * Best-effort pagination metadata for endpoints that don't return one
- * (e.g. semantic search). When `actualCount < pageSize` we infer
- * end-of-results — same heuristic Python's `paginate_all()` uses.
- */
-function derivePagination(
-  response: OMOPHubResponse<unknown>,
-  page: number,
-  pageSize: number,
-  actualCount: number,
-) {
-  const fromMeta = response.meta?.pagination;
-  if (fromMeta) return fromMeta;
-  return {
-    page,
-    page_size: pageSize,
-    total_items: actualCount,
-    total_pages: actualCount < pageSize ? page : page + 1,
-    has_next: actualCount >= pageSize,
-    has_previous: page > 1,
-  };
 }

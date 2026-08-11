@@ -95,6 +95,60 @@ export async function paginateAll<T>(
   return { data: collected, errors, pagesFetched };
 }
 
+/** Default page size for every resource's `*Iter` / `*All` helper. */
+export const ITER_DEFAULT_PAGE_SIZE = 100;
+
+/**
+ * What to assume when a response carries no `meta.pagination`.
+ *
+ * - `'more-if-page-full'` — the endpoint really does paginate, it just does
+ *   not report it, so a full page implies another one. Safe only when the
+ *   server is known to honour `page`. Note that every current search endpoint
+ *   *does* return `meta.pagination` (measured 2026-08-11), so for those this
+ *   is a fallback for older deployments rather than the normal path.
+ * - `'single-page'` — treat the response as the whole of what this server
+ *   will give us. Correct when a missing meta block means the deployment
+ *   predates pagination on that endpoint, because such a server ignores
+ *   `page` and returns the same first rows forever.
+ */
+export type MissingMetaPolicy = 'more-if-page-full' | 'single-page';
+
+/**
+ * Best-effort pagination metadata for a response that lacks its own.
+ *
+ * When `meta.pagination` is present it is returned untouched — the server's
+ * own `has_next` always wins. The `policy` only decides what to do in its
+ * absence, and getting that wrong is not symmetric: guessing "there is more"
+ * against a server that ignores `page` re-fetches the same rows forever,
+ * whereas guessing "that was everything" merely stops early.
+ *
+ * `policy` is deliberately REQUIRED rather than defaulted. The unsafe option
+ * is the one a default would hand out, so a new resource must state which
+ * assumption it is making about its endpoint instead of inheriting one — the
+ * mappings iterators looped forever precisely because that assumption was
+ * implicit.
+ */
+export function derivePagination(
+  response: OMOPHubResponse<unknown>,
+  page: number,
+  pageSize: number,
+  actualCount: number,
+  policy: MissingMetaPolicy,
+) {
+  const fromMeta = response.meta?.pagination;
+  if (fromMeta) return fromMeta;
+
+  const hasNext = policy === 'single-page' ? false : actualCount >= pageSize;
+  return {
+    page,
+    page_size: pageSize,
+    total_items: actualCount,
+    total_pages: hasNext ? page + 1 : page,
+    has_next: hasNext,
+    has_previous: page > 1,
+  };
+}
+
 function extractItems<T>(data: PaginatedData<T> | T[] | null): T[] {
   if (data === null) return [];
   if (Array.isArray(data)) return data;

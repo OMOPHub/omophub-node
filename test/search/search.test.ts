@@ -316,6 +316,66 @@ describe('client.search.semanticIter', () => {
   });
 });
 
+describe('semantic iterator page size', () => {
+  function semanticPage(fetchMock: ReturnType<typeof createMockFetch>) {
+    enqueueRawBody(fetchMock, {
+      success: true,
+      data: {
+        results: [
+          {
+            concept_id: 1,
+            concept_name: 'A',
+            vocabulary_id: 'X',
+            concept_code: 'a',
+            similarity_score: 0.9,
+          },
+        ],
+      },
+      meta: { pagination: mockPagination({ page: 1, page_size: 1, has_next: false }) },
+    });
+  }
+
+  test('clamps pageSize to the endpoint ceiling of 100', async () => {
+    // /v1/search/semantic validates page_size at max 100 and REJECTS rather
+    // than clamping, so an oversized request 400s on every page and the walk
+    // returns nothing at all.
+    const fetchMock = createMockFetch();
+    semanticPage(fetchMock);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.search.semanticAll('diabetes', { pageSize: 200 });
+
+    expect(new URL(lastCall(fetchMock).url).searchParams.get('page_size')).toBe('100');
+  });
+
+  test('leaves a page size under the ceiling alone', async () => {
+    const fetchMock = createMockFetch();
+    semanticPage(fetchMock);
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.search.semanticAll('diabetes', { pageSize: 25 });
+
+    expect(new URL(lastCall(fetchMock).url).searchParams.get('page_size')).toBe('25');
+  });
+
+  test('basicAll is not clamped — that endpoint reports real pagination', async () => {
+    // Basic search returns a truthful meta.pagination, so a server-side clamp
+    // just yields smaller pages; the walk still terminates correctly and there
+    // is nothing to protect against.
+    const fetchMock = createMockFetch();
+    enqueueRawBody(fetchMock, {
+      success: true,
+      data: { concepts: [{ concept_id: 1, concept_name: 'A' }] },
+      meta: { pagination: mockPagination({ page: 1, page_size: 1, has_next: false }) },
+    });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.search.basicAll('diabetes', { pageSize: 500 });
+
+    expect(new URL(lastCall(fetchMock).url).searchParams.get('page_size')).toBe('500');
+  });
+});
+
 describe('client.search.bulkBasic', () => {
   test('hits POST /search/bulk with snake-cased body', async () => {
     const fetchMock = createMockFetch();
