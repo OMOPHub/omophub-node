@@ -2,7 +2,7 @@
 
 **Query millions of standardized medical concepts from TypeScript with full type safety**
 
-Access SNOMED CT, ICD-10, RxNorm, LOINC, and 100+ OHDSI ATHENA vocabularies without downloading, installing, or maintaining local databases.
+Access SNOMED CT, ICD-10, RxNorm, LOINC, and 120+ OHDSI ATHENA vocabularies without downloading, installing, or maintaining local databases.
 
 [![npm version](https://img.shields.io/npm/v/@omophub/omophub-node.svg)](https://www.npmjs.com/package/@omophub/omophub-node)
 [![Node Version](https://img.shields.io/node/v/@omophub/omophub-node.svg)](https://www.npmjs.com/package/@omophub/omophub-node)
