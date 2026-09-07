@@ -278,9 +278,21 @@ describe('client.mappings pagination', () => {
 describe('client.mappings.map', () => {
   test('POST /concepts/map with sourceConcepts variant', async () => {
     const fetchMock = createMockFetch();
-    enqueueSuccess(fetchMock, { mappings: [], summary: { total_source_concepts: 2 } });
+    enqueueSuccess(fetchMock, {
+      mappings: [],
+      unmapped_sources: [
+        { source_concept_id: 201826, reason: 'no_mapping_found' },
+        { source_concept_id: 1112807, reason: 'source_not_found' },
+      ],
+      summary: {
+        requested_sources: 2,
+        mapped_sources: 0,
+        unmapped_sources: 2,
+        total_mappings: 0,
+      },
+    });
     const client = new OMOPHub('oh_test', { fetch: fetchMock });
-    await client.mappings.map({
+    const result = await client.mappings.map({
       targetVocabulary: 'SNOMED',
       sourceConcepts: [201826, 1112807],
       mappingType: 'direct',
@@ -296,6 +308,8 @@ describe('client.mappings.map', () => {
       mapping_type: 'direct',
       include_invalid: false,
     });
+    expect(result.data?.unmapped_sources).toHaveLength(2);
+    expect(result.data?.summary.requested_sources).toBe(2);
   });
 
   test('POST /concepts/map with sourceCodes variant', async () => {

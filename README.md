@@ -2,7 +2,7 @@
 
 **Query millions of standardized medical concepts from TypeScript with full type safety**
 
-Access SNOMED CT, ICD-10, RxNorm, LOINC, and 100+ OHDSI ATHENA vocabularies without downloading, installing, or maintaining local databases.
+Access SNOMED CT, ICD-10, RxNorm, LOINC, and 120+ OHDSI ATHENA vocabularies without downloading, installing, or maintaining local databases.
 
 [![npm version](https://img.shields.io/npm/v/@omophub/omophub-node.svg)](https://www.npmjs.com/package/@omophub/omophub-node)
 [![Node Version](https://img.shields.io/node/v/@omophub/omophub-node.svg)](https://www.npmjs.com/package/@omophub/omophub-node)
@@ -64,6 +64,12 @@ const mapping = await client.mappings.map({
   targetVocabulary: 'SNOMED',
   sourceCodes: [{ vocabulary_id: 'ICD10CM', concept_code: 'E11.9' }],
 });
+if (mapping.data) {
+  console.log(mapping.data.summary);
+  // Every source without a mapping is reported with source_not_found or
+  // no_mapping_found, rather than being silently dropped.
+  console.log(mapping.data.unmapped_sources);
+}
 
 // Navigate concept hierarchy
 const ancestors = await client.hierarchy.ancestors(201826, { maxLevels: 3 });
@@ -231,6 +237,7 @@ Find concepts similar to a known concept or natural language query:
 
 ```ts
 // Find concepts similar to a known concept
+// `algorithm` defaults to 'semantic'; 'lexical' and 'hybrid' are also available.
 const sim = await client.search.similar({ conceptId: 201826, algorithm: 'hybrid' });
 for (const r of sim.data?.similar_concepts ?? []) {
   console.log(`${r.concept_name} (score: ${r.similarity_score.toFixed(2)})`);

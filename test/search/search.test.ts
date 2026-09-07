@@ -200,19 +200,46 @@ describe('client.search.advanced', () => {
 describe('client.search.autocomplete', () => {
   test('hits GET /search/suggest with positional query', async () => {
     const fetchMock = createMockFetch();
-    enqueueSuccess(fetchMock, [{ suggestion: 'diabetes', concept_id: 201826 }]);
+    enqueueSuccess(fetchMock, {
+      query: 'diab',
+      suggestions: [
+        {
+          suggestion: 'Type 2 diabetes mellitus',
+          concept_id: 201826,
+          concept_code: '44054006',
+          vocabulary_id: 'SNOMED',
+          domain_id: 'Condition',
+          concept_class_id: 'Clinical Finding',
+          standard_concept: 'S',
+        },
+      ],
+    });
     const client = new OMOPHub('oh_test', { fetch: fetchMock });
     const { data, error } = await client.search.autocomplete('diab', {
       vocabularyIds: ['SNOMED'],
+      domainIds: ['Condition'],
       pageSize: 5,
     });
     expect(error).toBeNull();
-    expect(data).toEqual([{ suggestion: 'diabetes', concept_id: 201826 }]);
+    expect(data?.suggestions[0]?.suggestion).toBe('Type 2 diabetes mellitus');
     const { url } = lastCall(fetchMock);
     expect(url).toContain('/search/suggest');
     expect(url).toContain('query=diab');
     expect(url).toContain('vocabulary_ids=SNOMED');
+    expect(url).toContain('domain_ids=Condition');
     expect(url).toContain('page_size=5');
+  });
+
+  test('maps the deprecated domains option to domain_ids', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { query: 'diab', suggestions: [] });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.search.autocomplete('diab', { domains: ['Condition'] });
+
+    const { url } = lastCall(fetchMock);
+    expect(url).toContain('domain_ids=Condition');
+    expect(url).not.toContain('domains=');
   });
 });
 
@@ -472,6 +499,85 @@ describe('client.search.similar', () => {
     expect(init.method).toBe('POST');
     const body = JSON.parse(init.body as string);
     expect(body).toEqual({ concept_id: 201826, algorithm: 'hybrid' });
+  });
+
+  test('forwards every documented similarity option in snake_case', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, {
+      similar_concepts: [],
+      search_metadata: {
+        original_query: '201826',
+        algorithm_used: 'lexical',
+        similarity_threshold: 0,
+        total_candidates: 0,
+        results_returned: 0,
+        processing_time_ms: 1,
+        totals_are_lower_bound: false,
+      },
+    });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    await client.search.similar({
+      conceptId: 201826,
+      algorithm: 'lexical',
+      // 0 is a legitimate threshold, distinct from omitting it.
+      similarityThreshold: 0,
+      page: 3,
+      pageSize: 10,
+      vocabularyIds: ['SNOMED'],
+      domainIds: ['Condition'],
+      conceptClassIds: ['Clinical Finding'],
+      standardConcept: 'N',
+      includeInvalid: true,
+      includeScores: false,
+      includeExplanations: true,
+      excludeSelf: false,
+    });
+    const body = JSON.parse(lastCall(fetchMock).init.body as string);
+    expect(body).toEqual({
+      concept_id: 201826,
+      algorithm: 'lexical',
+      similarity_threshold: 0,
+      page: 3,
+      page_size: 10,
+      vocabulary_ids: ['SNOMED'],
+      domain_ids: ['Condition'],
+      concept_class_ids: ['Clinical Finding'],
+      standard_concept: 'N',
+      include_invalid: true,
+      include_scores: false,
+      include_explanations: true,
+      exclude_self: false,
+    });
+  });
+
+  test('types a scoreless concept, as include_scores=false returns', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, {
+      similar_concepts: [
+        {
+          concept_id: 313217,
+          concept_name: 'Type 1 diabetes mellitus',
+          vocabulary_id: 'SNOMED',
+          concept_code: '46635009',
+        },
+      ],
+      search_metadata: {
+        original_query: '201826',
+        algorithm_used: 'semantic',
+        similarity_threshold: 0.7,
+        total_candidates: 1,
+        results_returned: 1,
+        processing_time_ms: 1,
+      },
+    });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+    const response = await client.search.similar({
+      conceptId: 201826,
+      includeScores: false,
+    });
+    // `similarity_score` used to be typed as required, which made the
+    // documented `include_scores: false` response a type error.
+    expect(response.data?.similar_concepts[0]?.similarity_score).toBeUndefined();
   });
 
   test('accepts conceptName variant', async () => {

@@ -34,14 +34,20 @@ export interface SearchResult {
   search_metadata?: SearchMetadata;
 }
 
-/**
- * One entry in `AutocompleteResult.suggestions`. The server nests the
- * concept under a `suggestion` field and may add scoring fields alongside.
- */
+/** One concept-name suggestion returned by `GET /search/suggest`. */
 export interface AutocompleteEntry {
-  suggestion: Concept;
-  match_score?: number;
-  match_type?: string;
+  suggestion: string;
+  concept_id: Concept['concept_id'];
+  concept_code: Concept['concept_code'];
+  vocabulary_id: Concept['vocabulary_id'];
+  domain_id: Concept['domain_id'];
+  concept_class_id: Concept['concept_class_id'];
+  standard_concept: Concept['standard_concept'];
+  context?: {
+    vocabulary_id: string;
+    domain_id: string;
+    concept_class_id: string;
+  };
 }
 
 /**

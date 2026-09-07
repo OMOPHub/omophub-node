@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-07
+
+### Changed
+
+- Autocomplete now models the API's flat seven-field suggestion entries,
+  supports `domainIds` and `includeContext`, and maps the deprecated `domains`
+  option to `domain_ids`.
+- Similarity search now exposes the API's complete option set, pagination and
+  source-concept metadata, score omission, explanations, and degraded/lower-
+  bound result indicators. Its documented default algorithm is `semantic`.
+
+### Fixed
+
+- `mappings.map()` now types the API's actual per-source result: required
+  `unmapped_sources` and `summary` fields replace the never-emitted
+  `failed_mappings` shape. The unsupported `summary` field was removed from
+  `mappings.get()` results.
+
 ## [1.1.0] - 2026-08-11
 
 ### Added
@@ -115,8 +133,8 @@ Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
 <!-- Reference-style version links. -->
-[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/OMOPHub/omophub-node/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.1.0
 [1.0.1]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.1
 [1.0.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.0
-
