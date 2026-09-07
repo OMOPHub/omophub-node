@@ -1,0 +1,38 @@
+package.json
+  s_0fd210701b7f1e::t_96495ca84ea3af 3
+test/mappings/mappings.test.ts
+  s_0fd210701b7f1e::t_cc3f70fd025661 281-293,295,311-312
+examples/map-between-vocabularies.ts
+  s_0fd210701b7f1e::t_cc3f70fd025661 101-106
+src/mappings/interfaces/mapping.ts
+  s_0fd210701b7f1e::t_7b219e325ac584 29
+  s_0fd210701b7f1e::t_cc3f70fd025661 53-56,63-72,74-77,82-83
+src/index.ts
+  s_0fd210701b7f1e::t_cc3f70fd025661 100-101
+src/mappings/interfaces/index.ts
+  s_0fd210701b7f1e::t_cc3f70fd025661 11-12
+README.md
+  s_0fd210701b7f1e::t_cc3f70fd025661 67-72
+CHANGELOG.md
+  s_0fd210701b7f1e::t_cc3f70fd025661 18-24
+  s_0fd210701b7f1e::t_96495ca84ea3af 7-8,136-137
+  s_0fd210701b7f1e::t_ba668ebb5701ac 9-17
+src/version.ts
+  s_0fd210701b7f1e::t_96495ca84ea3af 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "165e0aee9e0066d492bc75ea907ced6fd7151e60",
+  "prompts": {},
+  "sessions": {
+    "s_0fd210701b7f1e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a07885-99a7-7062-b3c0-03e7f1077c3d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
