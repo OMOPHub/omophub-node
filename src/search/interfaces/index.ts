@@ -32,4 +32,5 @@ export type {
   SimilarConcept,
   SimilarSearchMetadata,
   SimilarSearchResult,
+  SimilarSourceConcept,
 } from './similar-search-result.js';

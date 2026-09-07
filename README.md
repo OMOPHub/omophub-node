@@ -231,6 +231,7 @@ Find concepts similar to a known concept or natural language query:
 
 ```ts
 // Find concepts similar to a known concept
+// `algorithm` defaults to 'semantic'; 'lexical' and 'hybrid' are also available.
 const sim = await client.search.similar({ conceptId: 201826, algorithm: 'hybrid' });
 for (const r of sim.data?.similar_concepts ?? []) {
   console.log(`${r.concept_name} (score: ${r.similarity_score.toFixed(2)})`);

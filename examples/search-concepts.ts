@@ -100,12 +100,12 @@ async function bulkSemanticSearch(client: OMOPHub): Promise<void> {
 
 async function autocompleteExample(client: OMOPHub): Promise<void> {
   console.log('\n=== Autocomplete ===');
-  // Returns `{ query, suggestions: [{ suggestion: Concept, match_score?, match_type? }] }`.
+  // Returns `{ query, suggestions: [{ suggestion: string, concept_id, ... }] }`.
   const { data, error } = await client.search.autocomplete('hypert', { pageSize: 5 });
   if (error) throw new Error(error.message);
   console.log(`Suggestions for '${data.query}':`);
   for (const s of data.suggestions.slice(0, 5)) {
-    console.log(`  [${s.suggestion.vocabulary_id}] ${s.suggestion.concept_name}`);
+    console.log(`  [${s.vocabulary_id}] ${s.suggestion}`);
   }
 }
 

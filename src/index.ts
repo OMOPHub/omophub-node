@@ -135,6 +135,7 @@ export type {
   SimilarSearchMetadata,
   SimilarSearchOptions,
   SimilarSearchResult,
+  SimilarSourceConcept,
 } from './search/interfaces/index.js';
 export { __version__ } from './version.js';
 export type {
