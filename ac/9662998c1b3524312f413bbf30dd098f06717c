@@ -1,0 +1,54 @@
+src/search/search.ts
+  s_cb3efafcb1bb83::t_e2050b8fab3e50 194,201,205-210
+test/search/search.test.ts
+  s_cb3efafcb1bb83::t_422df6b01228b0 232-243
+  s_98ecc778b4a653::t_94dc09890e8b9e 504-582
+  s_cb3efafcb1bb83::t_e2050b8fab3e50 203-216,220,224,229
+src/search/interfaces/similar-search-options.ts
+  s_98ecc778b4a653::t_c60cf385ca94fa 2,4-7,9-17,21-22,24-29,31,33,35-36
+src/search/interfaces/autocomplete-options.ts
+  s_cb3efafcb1bb83::t_e2050b8fab3e50 3-4,6,8
+examples/search-concepts.ts
+  s_cb3efafcb1bb83::t_e2050b8fab3e50 103,108
+e2e/search.test.ts
+  s_cb3efafcb1bb83::t_783292b10ed722 125-126
+src/search/interfaces/index.ts
+  s_98ecc778b4a653::t_ed9f736eb40e5b 35
+src/search/interfaces/search-result.ts
+  s_cb3efafcb1bb83::t_e2050b8fab3e50 37,39-50
+src/index.ts
+  s_98ecc778b4a653::t_0f5343d79c04e3 138
+src/search/interfaces/similar-search-result.ts
+  s_98ecc778b4a653::t_c60cf385ca94fa 4-8,17,19-23,30-34,39-40,44-64,70-71
+  s_98ecc778b4a653::t_11b59e29f0aafb 41-43
+examples/__docsnippet_check.ts
+  s_98ecc778b4a653::t_776a8e1358b4fd 1-2,4,8-9,12-13
+  s_98ecc778b4a653::t_02bc274d2bda81 3
+  s_98ecc778b4a653::t_a8388cf033a246 5-7,10-11
+README.md
+  s_98ecc778b4a653::t_55753d826de523 234
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "ac9662998c1b3524312f413bbf30dd098f06717c",
+  "prompts": {},
+  "sessions": {
+    "s_98ecc778b4a653": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5065d1dc-c4a4-48a0-93b9-5a45fc7fd268",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    },
+    "s_cb3efafcb1bb83": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0711a-e039-7581-9315-ce61c6b90fac",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
