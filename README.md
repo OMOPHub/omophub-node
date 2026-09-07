@@ -64,6 +64,12 @@ const mapping = await client.mappings.map({
   targetVocabulary: 'SNOMED',
   sourceCodes: [{ vocabulary_id: 'ICD10CM', concept_code: 'E11.9' }],
 });
+if (mapping.data) {
+  console.log(mapping.data.summary);
+  // Every source without a mapping is reported with source_not_found or
+  // no_mapping_found, rather than being silently dropped.
+  console.log(mapping.data.unmapped_sources);
+}
 
 // Navigate concept hierarchy
 const ancestors = await client.hierarchy.ancestors(201826, { maxLevels: 3 });

@@ -88,7 +88,6 @@ export type {
   ResponseMeta,
 } from './interfaces.js';
 export type {
-  FailedMapping,
   GetMappingsOptions,
   MapConceptsOptions,
   MapConceptsResult,
@@ -98,6 +97,8 @@ export type {
   MappingsListResult,
   MappingsSummary,
   SourceCodeRef,
+  UnmappedSource,
+  UnmappedSourceReason,
 } from './mappings/interfaces/index.js';
 export type {
   GetRelationshipsOptions,

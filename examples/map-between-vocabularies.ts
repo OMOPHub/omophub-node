@@ -98,10 +98,12 @@ async function mapConcepts(): Promise<void> {
   }
 
   console.log(`Mapped ${data.mappings.length} concepts to ICD-10-CM`);
-  if (data.summary) {
-    console.log(
-      `  ${data.summary.mapped_concepts ?? '?'}/${data.summary.total_source_concepts ?? '?'} source concepts mapped`,
-    );
+  console.log(
+    `  ${data.summary.mapped_sources}/${data.summary.requested_sources} source concepts mapped`,
+  );
+
+  for (const source of data.unmapped_sources) {
+    console.log(`  Unmapped source ${source.source_concept_id}: ${source.reason}`);
   }
 
   for (const m of data.mappings) {

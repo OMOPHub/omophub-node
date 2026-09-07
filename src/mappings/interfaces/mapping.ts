@@ -26,7 +26,7 @@ export interface MappingContext {
  *   `targetVocabulary` does NOT add the vocabulary/code fields —
  *   measured against production 2026-08-12. Resolve a target's
  *   vocabulary and code with `concepts.get(target_concept_id)`.
- * - `mappings.map` (`POST /mappings/map`) additionally returns
+ * - `mappings.map` (`POST /concepts/map`) additionally returns
  *   `source_*` / `target_*` `vocabulary_id` and `concept_code`.
  */
 export interface Mapping {
@@ -50,37 +50,37 @@ export interface Mapping {
 }
 
 export interface MappingsSummary {
-  total_source_concepts?: number;
-  total_mappings?: number;
-  mapped_concepts?: number;
-  unmapped_concepts?: number;
+  requested_sources: number;
+  mapped_sources: number;
+  unmapped_sources: number;
+  total_mappings: number;
 }
 
 export interface MappingsListResult {
   mappings: Mapping[];
-  summary?: MappingsSummary;
 }
 
-/**
- * Failed-mapping entry in `MapConceptsResult.failed_mappings`. Discriminated
- * by which input variant the failure traces back to — every failed mapping
- * carries either a `source_concept_id` (from the `sourceConcepts` input) or
- * a `source_code` (from the `sourceCodes` input), never an empty object.
- * `reason` is optional, mirroring `BatchConceptResult.failed_concepts` in
- * `concepts/interfaces/`.
- */
-export type FailedMapping =
-  | { source_concept_id: number; source_code?: never; reason?: string }
+export type UnmappedSourceReason = 'source_not_found' | 'no_mapping_found';
+
+/** A submitted source that produced no mappings. */
+export type UnmappedSource =
   | {
-      source_concept_id?: never;
-      source_code: { vocabulary_id: string; concept_code: string };
-      reason?: string;
+      source_concept_id: number;
+      vocabulary_id?: never;
+      concept_code?: never;
+      reason: UnmappedSourceReason;
+    }
+  | {
+      source_concept_id?: number;
+      vocabulary_id: string;
+      concept_code: string;
+      reason: UnmappedSourceReason;
     };
 
 export interface MapConceptsResult {
   mappings: Mapping[];
-  failed_mappings?: FailedMapping[];
-  summary?: MappingsSummary;
+  unmapped_sources: UnmappedSource[];
+  summary: MappingsSummary;
 }
 
 /**
