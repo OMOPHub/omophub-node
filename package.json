@@ -57,7 +57,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OMOPHub/omophub-node.git"
+    "url": "git+https://github.com/OMOPHub/omophub-node.git"
   },
   "bugs": {
     "url": "https://github.com/OMOPHub/omophub-node/issues"
