@@ -1,0 +1,21 @@
+test/search/search.test.ts
+  s_0fd210701b7f1e::t_48fc9c5d50a059 221-225
+e2e/search.test.ts
+  s_0fd210701b7f1e::t_48fc9c5d50a059 126-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "99cbab39ca74506aa1ef3bbc0684e6391dc9ebb2",
+  "prompts": {},
+  "sessions": {
+    "s_0fd210701b7f1e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a07885-99a7-7062-b3c0-03e7f1077c3d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
