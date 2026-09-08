@@ -34,27 +34,18 @@ export interface SearchResult {
   search_metadata?: SearchMetadata;
 }
 
-/** One concept-name suggestion returned by `GET /search/suggest`. */
+/** One compact suggestion returned by `GET /search/autocomplete`. */
 export interface AutocompleteEntry {
   suggestion: string;
-  concept_id: Concept['concept_id'];
-  concept_code: Concept['concept_code'];
-  vocabulary_id: Concept['vocabulary_id'];
-  domain_id: Concept['domain_id'];
-  concept_class_id: Concept['concept_class_id'];
-  standard_concept: Concept['standard_concept'];
-  context?: {
-    vocabulary_id: string;
-    domain_id: string;
-    concept_class_id: string;
-  };
+  type: 'concept_name' | 'concept_code';
+  count: number;
 }
 
 /**
- * `GET /search/suggest` returns `{ query, suggestions: [...] }` — the
- * caller's original query is echoed back. Wrapped, not a bare array.
+ * `GET /search/autocomplete` returns `{ query, suggestions, page_size }`.
  */
 export interface AutocompleteResult {
   query: string;
   suggestions: AutocompleteEntry[];
+  page_size: number;
 }

@@ -198,21 +198,18 @@ describe('client.search.advanced', () => {
 });
 
 describe('client.search.autocomplete', () => {
-  test('hits GET /search/suggest with positional query', async () => {
+  test('hits GET /search/autocomplete with positional query', async () => {
     const fetchMock = createMockFetch();
     enqueueSuccess(fetchMock, {
       query: 'diab',
       suggestions: [
         {
           suggestion: 'Type 2 diabetes mellitus',
-          concept_id: 201826,
-          concept_code: '44054006',
-          vocabulary_id: 'SNOMED',
-          domain_id: 'Condition',
-          concept_class_id: 'Clinical Finding',
-          standard_concept: 'S',
+          type: 'concept_name',
+          count: 1,
         },
       ],
+      page_size: 5,
     });
     const client = new OMOPHub('oh_test', { fetch: fetchMock });
     const { data, error } = await client.search.autocomplete('diab', {
@@ -223,7 +220,7 @@ describe('client.search.autocomplete', () => {
     expect(error).toBeNull();
     expect(data?.suggestions[0]?.suggestion).toBe('Type 2 diabetes mellitus');
     const { url } = lastCall(fetchMock);
-    expect(url).toContain('/search/suggest');
+    expect(url).toContain('/search/autocomplete');
     expect(url).toContain('query=diab');
     expect(url).toContain('vocabulary_ids=SNOMED');
     expect(url).toContain('domain_ids=Condition');

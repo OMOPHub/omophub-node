@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-08
+
+### Changed
+
+- Autocomplete now calls the canonical `/search/autocomplete` endpoint and
+  models its compact `suggestion`/`type`/`count` entries. `domainIds` remains
+  supported, and the deprecated `domains` option maps to `domain_ids`.
+
 ## [1.1.1] - 2026-09-07
 
 ### Changed
@@ -133,7 +141,8 @@ Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
 <!-- Reference-style version links. -->
-[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/OMOPHub/omophub-node/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/OMOPHub/omophub-node/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.1.0
 [1.0.1]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.1
