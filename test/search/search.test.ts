@@ -218,7 +218,11 @@ describe('client.search.autocomplete', () => {
       pageSize: 5,
     });
     expect(error).toBeNull();
-    expect(data?.suggestions[0]?.suggestion).toBe('Type 2 diabetes mellitus');
+    expect(data?.suggestions[0]).toEqual({
+      suggestion: 'Type 2 diabetes mellitus',
+      type: 'concept_name',
+      count: 1,
+    });
     const { url } = lastCall(fetchMock);
     expect(url).toContain('/search/autocomplete');
     expect(url).toContain('query=diab');

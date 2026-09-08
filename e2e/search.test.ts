@@ -122,8 +122,9 @@ describe('e2e: client.search.autocomplete', () => {
     expect(Array.isArray(data?.suggestions)).toBe(true);
     expect(data?.suggestions.length).toBeGreaterThan(0);
     const first = data?.suggestions[0];
-    expect(typeof first?.concept_id).toBe('number');
     expect(typeof first?.suggestion).toBe('string');
+    expect(['concept_name', 'concept_code']).toContain(first?.type);
+    expect(typeof first?.count).toBe('number');
   });
 
   runOrSkip('echoes the query field with vocabulary filter applied', async () => {
