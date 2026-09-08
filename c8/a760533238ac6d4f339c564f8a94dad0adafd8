@@ -1,0 +1,29 @@
+test/search/search.test.ts
+  s_0fd210701b7f1e::t_7ddcbf59b09cf2 201,208-209,212,223
+src/search/search.ts
+  s_0fd210701b7f1e::t_7ddcbf59b09cf2 193-194,200-209,213,215
+package.json
+  s_0fd210701b7f1e::t_6bd420a826b6d3 3
+src/search/interfaces/search-result.ts
+  s_0fd210701b7f1e::t_7ddcbf59b09cf2 37,40-41,45,50
+CHANGELOG.md
+  s_0fd210701b7f1e::t_6bd420a826b6d3 7-14,144-145
+package-lock.json
+  s_0fd210701b7f1e::t_82d6d60d1aa426 3,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "c8a760533238ac6d4f339c564f8a94dad0adafd8",
+  "prompts": {},
+  "sessions": {
+    "s_0fd210701b7f1e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a07885-99a7-7062-b3c0-03e7f1077c3d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "alex-omophub <sdk@omophub.com>"
+    }
+  }
+}
