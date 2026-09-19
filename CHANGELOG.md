@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+### Added
+
+- `RelationshipFilter.targetVocabularies` restricts an advanced-search
+  relationship filter to targets in the given vocabularies (for example,
+  concepts that map to SNOMED).
+
+### Fixed
+
+- `RelationshipFilter.direction` now accepts `'both'`, which the API has
+  always supported.
+
 ## [1.2.0] - 2026-09-08
 
 ### Changed

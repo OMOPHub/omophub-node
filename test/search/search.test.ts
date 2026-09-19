@@ -197,6 +197,24 @@ describe('client.search.advanced', () => {
   });
 });
 
+describe('client.search.advanced relationship filters', () => {
+  test('sends targetVocabularies and direction both as snake_case', async () => {
+    const fetchMock = createMockFetch();
+    enqueueSuccess(fetchMock, { concepts: [mockConcept()] });
+    const client = new OMOPHub('oh_test', { fetch: fetchMock });
+
+    await client.search.advanced('diabetes', {
+      relationshipFilters: [
+        { relationshipId: 'Maps to', targetVocabularies: ['SNOMED'], direction: 'both' },
+      ],
+    });
+    const body = JSON.parse(lastCall(fetchMock).init.body as string);
+    expect(body.relationship_filters).toEqual([
+      { relationship_id: 'Maps to', target_vocabularies: ['SNOMED'], direction: 'both' },
+    ]);
+  });
+});
+
 describe('client.search.autocomplete', () => {
   test('hits GET /search/autocomplete with positional query', async () => {
     const fetchMock = createMockFetch();
