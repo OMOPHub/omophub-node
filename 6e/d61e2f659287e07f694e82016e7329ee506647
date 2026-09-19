@@ -1,0 +1,24 @@
+src/search/interfaces/advanced-search-options.ts
+  s_4577c27db22f0a::t_334acb5923011f 5-6,11-14
+test/search/search.test.ts
+  s_4577c27db22f0a::t_37d8bfdc1176e3 203-204
+  s_4577c27db22f0a::t_334acb5923011f 200-202,205-217
+CHANGELOG.md
+  s_4577c27db22f0a::t_3b6e689ff91ced 7-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "6ed61e2f659287e07f694e82016e7329ee506647",
+  "prompts": {},
+  "sessions": {
+    "s_4577c27db22f0a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "656603ef-2811-49d1-89ac-fe26f64f89a2",
+        "model": "claude-opus-5"
+      },
+      "human_author": "alex-omophub <alex@omophub.com>"
+    }
+  }
+}
