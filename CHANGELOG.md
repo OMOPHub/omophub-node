@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+### Security
+
+- Updated Vitest and its coverage provider to 4.1.12 or later and enforced
+  patched Vite and source-map-js versions in development tooling.
+- Added `npm run audit:dependencies` to CI to audit the full lockfile,
+  including development and optional dependencies.
+
 ### Added
 
 - `RelationshipFilter.targetVocabularies` restricts an advanced-search
@@ -11,6 +18,8 @@ All notable changes to this project will be documented in this file. The format 
   concepts that map to SNOMED).
 
 ### Fixed
+
+- Corrected `format:check` to use Biome's supported read-only formatting command.
 
 - `RelationshipFilter.direction` now accepts `'both'`, which the API has
   always supported.

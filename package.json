@@ -33,8 +33,9 @@
     "lint:fix": "biome check --write src/ test/ e2e/",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.e2e.json",
     "format": "biome format --write src/ test/ e2e/",
-    "format:check": "biome format --check src/ test/ e2e/",
-    "prepublishOnly": "npm run build"
+    "format:check": "biome format src/ test/ e2e/",
+    "prepublishOnly": "npm run build",
+    "audit:dependencies": "npm audit --package-lock-only --include=dev --include=optional --audit-level=low"
   },
   "keywords": [
     "omophub",
@@ -66,9 +67,13 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
     "@types/node": "^25.9.3",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.12",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "vite": ">=8.1.6 <9.0.0",
+    "source-map-js": ">=1.2.2 <2.0.0"
   }
 }
