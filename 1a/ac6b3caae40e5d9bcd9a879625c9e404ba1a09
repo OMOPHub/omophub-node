@@ -1,0 +1,21 @@
+CHANGELOG.md
+  s_01a48dc551d115::t_10f2e05adeb7f7 22-24
+e2e/search.test.ts
+  s_01a48dc551d115::t_f797e44269146e 46-47,54-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1aac6b3caae40e5d9bcd9a879625c9e404ba1a09",
+  "prompts": {},
+  "sessions": {
+    "s_01a48dc551d115": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a16038-b441-7c21-be6c-6253c947f491",
+        "model": "unknown"
+      },
+      "human_author": "alex-omophub <alex@omophub.com>"
+    }
+  }
+}
