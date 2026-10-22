@@ -34,6 +34,12 @@ All notable changes to this project will be documented in this file. The format 
 - Autocomplete now calls the canonical `/search/autocomplete` endpoint and
   models its compact `suggestion`/`type`/`count` entries. `domainIds` remains
   supported, and the deprecated `domains` option maps to `domain_ids`.
+- **Breaking TypeScript API changes:** `AutocompleteOptions.includeContext`
+  was removed. `AutocompleteEntry` no longer exposes `concept_id`, `concept_code`,
+  `vocabulary_id`, `domain_id`, `concept_class_id`, `standard_concept`, or `context`.
+- **Migration:** remove `includeContext` from autocomplete options and display
+  `suggestion`, `type`, and `count`. Use `search.basic()` when concept records
+  and identifiers are needed.
 
 ## [1.1.1] - 2026-09-07
 
