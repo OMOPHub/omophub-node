@@ -190,21 +190,29 @@ export class Search {
   // ─── Autocomplete ──────────────────────────────────────────────────
 
   /**
-   * Lightweight typeahead suggestions. The server returns
-   * `{ query, suggestions: [{ suggestion: string, concept_id, ... }] }`
-   * — `query` echoes the input, `suggestions` is the array.
+   * Lightweight typeahead suggestions. The server returns compact suggestion
+   * records with the matched value, match type, and occurrence count.
    */
   async autocomplete(
     query: string,
     options: AutocompleteOptions & GetOptions = {},
   ): Promise<OMOPHubResponse<AutocompleteResult>> {
-    const { signal, headers, query: extraQuery, domains, domainIds, ...flags } = options;
-    return this.client.get<AutocompleteResult>('/search/suggest', {
+    const {
+      signal,
+      headers,
+      query: extraQuery,
+      domains,
+      domainIds,
+      vocabularyIds,
+      pageSize,
+    } = options;
+    return this.client.get<AutocompleteResult>('/search/autocomplete', {
       signal,
       headers,
       query: {
-        ...flags,
+        ...(vocabularyIds ? { vocabularyIds } : {}),
         ...(domainIds || domains ? { domainIds: domainIds ?? domains } : {}),
+        ...(pageSize !== undefined ? { pageSize } : {}),
         ...extraQuery,
         query,
       },

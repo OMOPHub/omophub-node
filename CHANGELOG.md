@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+### Security
+
+- Updated Vitest and its coverage provider to 4.1.12 or later and enforced
+  patched Vite and source-map-js versions in development tooling.
+- Added `npm run audit:dependencies` to CI to audit the full lockfile,
+  including development and optional dependencies.
+
+### Added
+
+- `RelationshipFilter.targetVocabularies` restricts an advanced-search
+  relationship filter to targets in the given vocabularies (for example,
+  concepts that map to SNOMED).
+
+### Fixed
+
+- The live exact-match search smoke test now tolerates rate-limit responses
+  from its no-retry client, matching the other live API smoke tests.
+
+- Corrected `format:check` to use Biome's supported read-only formatting command.
+
+- `RelationshipFilter.direction` now accepts `'both'`, which the API has
+  always supported.
+
+## [1.2.0] - 2026-09-08
+
+### Changed
+
+- Autocomplete now calls the canonical `/search/autocomplete` endpoint and
+  models its compact `suggestion`/`type`/`count` entries. `domainIds` remains
+  supported, and the deprecated `domains` option maps to `domain_ids`.
+- **Breaking TypeScript API changes:** `AutocompleteOptions.includeContext`
+  was removed. `AutocompleteEntry` no longer exposes `concept_id`, `concept_code`,
+  `vocabulary_id`, `domain_id`, `concept_class_id`, `standard_concept`, or `context`.
+- **Migration:** remove `includeContext` from autocomplete options and display
+  `suggestion`, `type`, and `count`. Use `search.basic()` when concept records
+  and identifiers are needed.
+
 ## [1.1.1] - 2026-09-07
 
 ### Changed
@@ -133,7 +170,8 @@ Standalone: omophubFhirUrl, getApiKey, setApiKey, hasApiKey
 ```
 
 <!-- Reference-style version links. -->
-[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/OMOPHub/omophub-node/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/OMOPHub/omophub-node/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/OMOPHub/omophub-node/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.1.0
 [1.0.1]: https://github.com/OMOPHub/omophub-node/releases/tag/v1.0.1
