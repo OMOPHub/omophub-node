@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- The live exact-match search smoke test now tolerates rate-limit responses
+  from its no-retry client, matching the other live API smoke tests.
+
 - Corrected `format:check` to use Biome's supported read-only formatting command.
 
 - `RelationshipFilter.direction` now accepts `'both'`, which the API has

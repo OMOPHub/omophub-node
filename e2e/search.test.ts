@@ -43,14 +43,20 @@ describe('e2e: client.search.basic', () => {
     await softThrottle();
     // Use a no-retry client — exactMatch=true triggers a slower server path
     // and full retries would push us past the test timeout. Either we get
-    // an empty/non-empty success or a structured timeout — both are fine.
+    // an empty/non-empty success or a structured transient error. A 429
+    // from the shared API limiter is expected with retries disabled.
     const client = e2eClientNoRetry();
     const { data, error } = await client.search.basic('Type 2 diabetes mellitus', {
       exactMatch: true,
       pageSize: 3,
     });
     if (error) {
-      expect(['timeout_error', 'connection_error', 'validation_error']).toContain(error.name);
+      expect([
+        'timeout_error',
+        'connection_error',
+        'validation_error',
+        'rate_limit_exceeded',
+      ]).toContain(error.name);
     } else {
       expect(Array.isArray(data?.concepts)).toBe(true);
     }
