@@ -1,0 +1,23 @@
+.github/workflows/ci.yml
+  s_37e801c2bba21a::t_70d89adf7c2c25 15,53
+.github/workflows/publish.yml
+  s_37e801c2bba21a::t_e9b3cf4ff3b125 18
+.nvmrc
+  s_37e801c2bba21a::t_d8ed5e32a0b41e 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3cd0ce10012afafb01fcfd3cd9bcdc3248285edb",
+  "prompts": {},
+  "sessions": {
+    "s_37e801c2bba21a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a16ec3-4674-77e2-8eed-dab9eb28488c",
+        "model": "unknown"
+      },
+      "human_author": "alex-omophub <alex@omophub.com>"
+    }
+  }
+}
